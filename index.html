@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILoveGovernmentWebsites</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <link rel="icon" href="/favicon.ico?v=2" type="image/x-icon">
+
+
+    <style>
+        @keyframes float {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .blob { animation: float 10s ease-in-out infinite; }
+        .blob-delayed { animation: float 14s ease-in-out infinite alternate; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        .glass-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus { border-color: rgba(99, 102, 241, 0.8); outline: none; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
+        
+        .tab-btn { background: rgba(255,255,255,0.05); color: #a1a1aa; border: 1px solid transparent; }
+        .tab-btn.active { background: rgba(99, 102, 241, 0.2); color: white; border: 1px solid rgba(99, 102, 241, 0.5); text-shadow: 0 0 8px rgba(255,255,255,0.4); }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        
+        .cropper-view-box, .cropper-face { border-radius: 4px; }
+
+        .glass-checkbox {
+            appearance: none; -webkit-appearance: none;
+            min-width: 1.25rem; height: 1.25rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.375rem; background: rgba(0, 0, 0, 0.3);
+            position: relative; cursor: pointer; transition: all 0.2s ease;
+        }
+        .glass-checkbox:checked {
+            background: rgba(99, 102, 241, 0.8); border-color: rgba(99, 102, 241, 1);
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+        }
+        .glass-checkbox:checked::after {
+            content: ''; position: absolute; left: 30%; top: 15%;
+            width: 30%; height: 50%; border: solid white;
+            border-width: 0 2px 2px 0; transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-slate-100 min-h-screen font-sans relative overflow-x-hidden selection:bg-indigo-500/30">
+    
+    <div class="fixed inset-0 z-[-1] overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/30 rounded-full mix-blend-screen filter blur-[100px] blob"></div>
+        <div class="absolute top-[40%] right-[-10%] w-[400px] h-[400px] bg-fuchsia-600/30 rounded-full mix-blend-screen filter blur-[100px] blob-delayed"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] blob"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-6 sm:py-8 relative z-10">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 border-b border-white/10">
+            <div class="mb-5 md:mb-0 text-center md:text-left w-full md:w-auto">
+                <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)] break-all sm:break-normal">ILoveGovernmentWebsites</h1>
+                <p class="text-sm text-slate-400 mt-2 font-medium tracking-wide">For strict forms and absolute privacy.</p>
+            </div>
+            <nav class="flex flex-wrap justify-center gap-2 glass-panel p-1.5 rounded-2xl w-full md:w-auto">
+                <button onclick="switchTab('converter')" id="tab-converter" class="tab-btn active px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">Convert</button>
+                <button onclick="switchTab('cropper')" id="tab-cropper" class="tab-btn px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">Crop</button>
+                <button onclick="switchTab('compressor')" id="tab-compressor" class="tab-btn px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">KB Reducer</button>
+                <button onclick="switchTab('pdf-tool')" id="tab-pdf-tool" class="tab-btn px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">PDF Composer</button>
+            </nav>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                
+                <template id="format-options">
+                    <optgroup label="Images" class="bg-slate-900 text-white">
+                        <option value="png">PNG (Lossless)</option>
+                        <option value="jpg">JPG (Standard)</option>
+                        <option value="webp">WebP (Optimized)</option>
+                        <option value="avif">AVIF (Next-Gen)</option>
+                        <option value="heic">HEIC (Apple)</option>
+                        <option value="gif">GIF</option>
+                        <option value="bmp">BMP</option>
+                        <option value="ico">ICO (Icon)</option>
+                    </optgroup>
+                </template>
+
+                <!-- Tool 1: Format Converter -->
+                <div id="panel-converter" class="glass-panel p-5 sm:p-8 rounded-3xl tool-panel">
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-6">Format Converter</h2>
+                    <div class="space-y-5">
+                        <select id="convFormat" class="w-full glass-input rounded-xl px-4 py-3 appearance-none">
+                            <option value="mp3" class="bg-slate-900">Extract Audio from MP4</option>
+                        </select>
+                        <div class="border-2 border-dashed border-white/20 rounded-2xl p-6 sm:p-10 text-center relative hover:border-indigo-400/50 transition-colors bg-black/20">
+                            <input type="file" id="convFile" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                            <div class="text-slate-300 text-sm sm:text-base" id="convLabel">Tap or Drop media here</div>
+                        </div>
+                        <button onclick="processApi('/api/convert', 'convFile', {target_format: 'convFormat'}, this)" class="w-full bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-400 hover:to-blue-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all">Process File</button>
+                    </div>
+                </div>
+
+                <!-- Tool 2: Visual Cropper -->
+                <div id="panel-cropper" class="glass-panel p-5 sm:p-8 rounded-3xl tool-panel hidden">
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-6">Visual Crop Editor</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                        <select id="cropRatio" class="glass-input rounded-xl px-4 py-3 appearance-none">
+                            <option value="NaN" class="bg-slate-900">Free Size (Custom)</option>
+                            <option value="1:1" class="bg-slate-900">Passport Square (1:1)</option>
+                            <option value="4:5" class="bg-slate-900">Document Portrait (4:5)</option>
+                            <option value="16:9" class="bg-slate-900">Landscape (16:9)</option>
+                        </select>
+                        <select id="cropFormat" class="glass-input rounded-xl px-4 py-3 appearance-none"></select>
+                    </div>
+                    
+                    <div id="cropDropzone" class="border-2 border-dashed border-white/20 rounded-2xl p-6 sm:p-10 text-center relative hover:border-fuchsia-400/50 transition-colors bg-black/20 mb-5">
+                        <input type="file" id="cropFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                        <div class="text-slate-300 text-sm sm:text-base">Tap or Drop image to begin</div>
+                    </div>
+
+                    <div id="cropPreviewContainer" class="hidden mb-5 w-full max-h-[500px] overflow-hidden rounded-2xl bg-black/40 border border-white/10">
+                        <img id="cropImage" src="" class="block max-w-full">
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button id="btnCancelCrop" onclick="resetCropperUI()" class="hidden px-6 py-3.5 bg-white/10 hover:bg-white/20 font-bold text-white rounded-xl transition-all">Cancel</button>
+                        <button id="btnApplyCrop" onclick="processVisualCrop()" class="w-full bg-gradient-to-r from-fuchsia-500 to-purple-500 hover:from-fuchsia-400 hover:to-purple-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(217,70,239,0.4)] transition-all">Apply Visual Crop</button>
+                    </div>
+                </div>
+
+                <!-- Tool 3: KB Reducer -->
+                <div id="panel-compressor" class="glass-panel p-5 sm:p-8 rounded-3xl tool-panel hidden">
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-6">KB Reducer</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                        <div class="relative">
+                            <span class="absolute left-4 top-3.5 text-slate-400 text-sm font-bold z-10 pointer-events-none">KB</span>
+                            <input type="number" id="compKb" placeholder="Target size" value="200" class="w-full glass-input rounded-xl py-3 pl-12 pr-4 relative z-0">
+                        </div>
+                        <select id="compFormat" class="glass-input rounded-xl px-4 py-3 appearance-none"></select>
+                    </div>
+                    <div class="border-2 border-dashed border-white/20 rounded-2xl p-6 sm:p-10 text-center relative hover:border-cyan-400/50 transition-colors bg-black/20 mb-5">
+                        <input type="file" id="compFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                        <div class="text-slate-300 text-sm sm:text-base" id="compLabel">Tap or Drop image to reduce</div>
+                    </div>
+                    <button onclick="processApi('/api/compress', 'compFile', {target_format: 'compFormat', target_kb: 'compKb'}, this)" class="w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all">Compress Image</button>
+                </div>
+
+                <!-- Tool 4: PDF Composer -->
+                <div id="panel-pdf-tool" class="glass-panel p-5 sm:p-8 rounded-3xl tool-panel hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl sm:text-2xl font-semibold">Image to PDF Composer</h2>
+                        <span class="bg-rose-500/20 text-rose-300 text-[10px] sm:text-xs px-2 sm:px-3 py-1 rounded-full border border-rose-500/30">Staging Area</span>
+                    </div>
+
+                    <div class="border-2 border-dashed border-white/20 rounded-2xl p-6 sm:p-10 text-center relative hover:border-rose-400/50 transition-colors bg-black/20 mb-5">
+                        <input type="file" id="pdfImagesInput" multiple accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                        <div class="text-slate-300 text-sm sm:text-base">Tap or Drop to add images to the sequence</div>
+                    </div>
+
+                    <div id="pdfPreviewList" class="flex flex-wrap gap-3 sm:gap-4 mb-5 max-h-[300px] overflow-y-auto p-2 bg-black/20 rounded-xl border border-white/5 min-h-[120px] items-center justify-center">
+                        <div class="text-slate-500 text-sm">No images added yet</div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button onclick="clearPdfList()" class="px-6 py-3.5 bg-white/10 hover:bg-white/20 font-bold text-white rounded-xl transition-all">Clear</button>
+                        <button id="btnCompilePdf" onclick="compileDirectPDF(this)" class="w-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.4)] transition-all">Generate PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tray -->
+            <div class="glass-panel p-5 sm:p-6 rounded-3xl h-[450px] lg:h-[600px] flex flex-col border-t border-white/30">
+                <div class="flex justify-between items-center mb-5 sm:mb-6 border-b border-white/10 pb-4">
+                    <h3 class="font-bold text-xs sm:text-sm tracking-widest uppercase text-slate-300 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_#4ade80] animate-pulse"></span> Activity
+                    </h3>
+                    <button onclick="compilePdfFromSelection()" class="text-[10px] sm:text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-2 sm:px-3 py-1.5 rounded-lg font-semibold transition text-indigo-300">Merge Selected</button>
+                </div>
+                <div id="historyList" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formats = document.getElementById('format-options').innerHTML;
+        document.getElementById('convFormat').innerHTML += formats;
+        document.getElementById('cropFormat').innerHTML = formats;
+        document.getElementById('compFormat').innerHTML = formats;
+
+        ['conv', 'comp'].forEach(prefix => {
+            document.getElementById(`${prefix}File`).addEventListener('change', e => {
+                document.getElementById(`${prefix}Label`).innerText = e.target.files[0]?.name || "Tap or Drop media here";
+            });
+        });
+
+        // PDF COMPOSER LOGIC
+        let pdfFilesArray = [];
+
+        document.getElementById('pdfImagesInput').addEventListener('change', e => {
+            const files = Array.from(e.target.files);
+            files.forEach(file => pdfFilesArray.push(file));
+            renderPdfPreview();
+            e.target.value = ''; 
+        });
+
+        function renderPdfPreview() {
+            const container = document.getElementById('pdfPreviewList');
+            if (pdfFilesArray.length === 0) {
+                container.innerHTML = '<div class="w-full text-center text-slate-500 py-4 text-sm">No images added yet</div>';
+                return;
+            }
+            container.innerHTML = '';
+
+            const promises = pdfFilesArray.map(file => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            Promise.all(promises).then(results => {
+                results.forEach((src, index) => {
+                    container.innerHTML += `
+                        <div class="relative group w-[80px] sm:w-[100px] bg-black/40 rounded-xl overflow-hidden border border-white/10 flex flex-col justify-between hover:border-rose-500/50 transition-colors">
+                            <img src="${src}" class="w-full h-[80px] sm:h-[100px] object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                            
+                            <div class="flex w-full justify-between items-center bg-black/80 px-1 py-1 sm:py-1.5 border-t border-white/10">
+                                <button onclick="movePdfFile(${index}, -1)" class="${index === 0 ? 'invisible' : ''} text-white hover:text-indigo-400 p-1 bg-white/10 rounded transition-colors text-[10px] sm:text-xs">◀</button>
+                                <span class="text-[9px] sm:text-[10px] font-bold text-white bg-black px-1.5 sm:px-2 py-0.5 rounded-full">Pg ${index + 1}</span>
+                                <button onclick="movePdfFile(${index}, 1)" class="${index === pdfFilesArray.length - 1 ? 'invisible' : ''} text-white hover:text-indigo-400 p-1 bg-white/10 rounded transition-colors text-[10px] sm:text-xs">▶</button>
+                            </div>
+                            
+                            <button onclick="removePdfFile(${index})" class="absolute top-1 right-1 bg-red-500/90 hover:bg-red-500 text-white w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all shadow-lg sm:transform sm:translate-y-[-5px] sm:group-hover:translate-y-0 z-10">✕</button>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function movePdfFile(index, direction) {
+            if (index + direction < 0 || index + direction >= pdfFilesArray.length) return;
+            const temp = pdfFilesArray[index];
+            pdfFilesArray[index] = pdfFilesArray[index + direction];
+            pdfFilesArray[index + direction] = temp;
+            renderPdfPreview();
+        }
+
+        function removePdfFile(index) {
+            pdfFilesArray.splice(index, 1);
+            renderPdfPreview();
+        }
+
+        function clearPdfList() {
+            pdfFilesArray = [];
+            renderPdfPreview();
+        }
+
+        async function compileDirectPDF(btn) {
+            if (pdfFilesArray.length === 0) return alert("Add at least one image to the staging area.");
+            
+            const originalText = btn.innerText;
+            btn.innerText = "Compiling PDF...";
+            btn.disabled = true;
+            
+            const formData = new FormData();
+            pdfFilesArray.forEach(file => formData.append("files", file));
+            
+            try {
+                const res = await fetch('/api/merge-pdf', { method: 'POST', body: formData });
+                if(res.ok) {
+                    clearPdfList();
+                    fetchHistory();
+                } else alert("Error compiling PDF.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // Cropper Logic
+        let cropper;
+        document.getElementById('cropFile').addEventListener('change', e => {
+            const file = e.target.files[0];
+            if(file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById('cropImage').src = url;
+                document.getElementById('cropDropzone').classList.add('hidden');
+                document.getElementById('cropPreviewContainer').classList.remove('hidden');
+                document.getElementById('btnCancelCrop').classList.remove('hidden');
+                if(cropper) cropper.destroy();
+                cropper = new Cropper(document.getElementById('cropImage'), { viewMode: 1, aspectRatio: NaN, background: false });
+            }
+        });
+
+        document.getElementById('cropRatio').addEventListener('change', e => {
+            if(!cropper) return;
+            const val = e.target.value;
+            if(val === 'NaN') cropper.setAspectRatio(NaN);
+            else { const [w, h] = val.split(':'); cropper.setAspectRatio(w / h); }
+        });
+
+        function resetCropperUI() {
+            if(cropper) cropper.destroy();
+            cropper = null;
+            document.getElementById('cropFile').value = '';
+            document.getElementById('cropDropzone').classList.remove('hidden');
+            document.getElementById('cropPreviewContainer').classList.add('hidden');
+            document.getElementById('btnCancelCrop').classList.add('hidden');
+        }
+
+        async function processVisualCrop() {
+            if(!cropper) return alert("Select an image first");
+            const format = document.getElementById('cropFormat').value;
+            const btn = document.getElementById('btnApplyCrop');
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+            
+            cropper.getCroppedCanvas().toBlob(async (blob) => {
+                const formData = new FormData();
+                formData.append("file", blob, "cropped_source.png"); 
+                formData.append("target_format", format);
+                try {
+                    const res = await fetch('/api/convert', { method: 'POST', body: formData });
+                    if(res.ok) { resetCropperUI(); fetchHistory(); }
+                    else alert("Error saving crop.");
+                } finally { btn.innerText = originalText; btn.disabled = false; }
+            }, 'image/png');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tool-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`panel-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        async function renameItem(id, newName, oldName) {
+            if (newName === oldName) return;
+            if (!newName.trim()) { alert("Filename cannot be empty."); fetchHistory(); return; }
+            const formData = new FormData();
+            formData.append("new_name", newName.trim());
+            const res = await fetch(`/api/rename/${id}`, { method: 'PUT', body: formData });
+            if (!res.ok) {
+                const data = await res.json();
+                alert(data.detail || "Error renaming file");
+            }
+            fetchHistory();
+        }
+
+        async function fetchHistory() {
+            const res = await fetch('/api/history');
+            const data = await res.json();
+            const container = document.getElementById('historyList');
+            if(data.length === 0) {
+                container.innerHTML = '<div class="text-slate-500 text-sm text-center pt-10 font-medium">No recent activity</div>';
+                return;
+            }
+            container.innerHTML = '';
+            data.forEach(item => {
+                const isImg = ['png','jpg','webp','avif','heic','gif','bmp','jpeg','ico'].includes(item.format);
+                container.innerHTML += `
+                    <div class="bg-black/30 border border-white/5 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between group hover:bg-black/40 transition">
+                        <div class="flex items-center space-x-2 sm:space-x-3 overflow-hidden">
+                            ${isImg ? `<input type="checkbox" value="${item.id}" class="pdf-check glass-checkbox transform scale-75 sm:scale-100">` : '<div class="w-4 sm:w-5"></div>'}
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-1 sm:gap-2 group/edit">
+                                    <input type="text" value="${item.name}" 
+                                        class="bg-transparent border-b border-transparent hover:border-white/20 focus:border-indigo-500 text-slate-100 font-semibold text-xs sm:text-sm outline-none w-24 sm:w-32 transition-colors px-1 -ml-1 rounded"
+                                        onchange="renameItem('${item.id}', this.value, '${item.name}')"
+                                        onkeydown="if(event.key==='Enter') this.blur()"
+                                        title="Tap to rename">
+                                    <span class="text-[10px] text-slate-500 opacity-100 sm:opacity-0 sm:group-hover/edit:opacity-100 transition-opacity cursor-pointer">✏️</span>
+                                </div>
+                                <p class="text-[9px] sm:text-[11px] text-slate-400 font-medium mt-0.5 px-1">${item.size} • ${item.format.toUpperCase()}</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-1 sm:space-x-2 pl-1 sm:pl-2">
+                            <a href="/api/download/${item.id}" download class="p-1 sm:p-1.5 bg-white/5 hover:bg-indigo-500/30 rounded-lg text-indigo-300 transition-colors text-xs sm:text-base">↓</a>
+                            <button onclick="deleteItem('${item.id}')" class="p-1 sm:p-1.5 bg-white/5 hover:bg-rose-500/30 rounded-lg text-rose-400 transition-colors text-xs sm:text-base">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function processApi(endpoint, fileInputId, payloadMap, btn) {
+            const fileInput = document.getElementById(fileInputId);
+            if(!fileInput.files[0]) return alert("Please select a file first.");
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            for (const [key, id] of Object.entries(payloadMap)) formData.append(key, document.getElementById(id).value);
+            try {
+                const res = await fetch(endpoint, { method: 'POST', body: formData });
+                if(res.ok) {
+                    fileInput.value = '';
+                    fileInput.nextElementSibling.innerText = "Tap or Drop media here";
+                    fetchHistory();
+                } else alert("Error processing file.");
+            } finally { btn.innerText = originalText; btn.disabled = false; }
+        }
+
+        async function compilePdfFromSelection() {
+            const checked = Array.from(document.querySelectorAll('.pdf-check:checked')).map(el => el.value);
+            if(checked.length === 0) return alert("Select images using checkboxes.");
+            const formData = new FormData();
+            formData.append("file_ids", checked.join(","));
+            const res = await fetch('/api/merge-pdf', { method: 'POST', body: formData });
+            if(res.ok) fetchHistory();
+        }
+
+        async function deleteItem(id) {
+            await fetch(`/api/delete/${id}`, { method: 'DELETE' });
+            fetchHistory();
+        }
+
+        fetchHistory();
+        setInterval(fetchHistory, 30000);
+    </script>
+</body>
+</html>
