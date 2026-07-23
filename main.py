@@ -59,7 +59,7 @@ async def favicon():
 
 @app.get("/")
 async def get_ui():
-    with open("index.html", "r") as f:
+    with open("index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
 @app.get("/api/history")
