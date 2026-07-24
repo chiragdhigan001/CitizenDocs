@@ -25,8 +25,8 @@ By running entirely on your local machine, it guarantees that your sensitive doc
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/DevAyu-Codes/ILoveGovernmentWebsites.git
-   cd ILoveGovernmentWebsites
+   git clone https://github.com/chiragdhigan001/CitizenDocs.git
+   cd CitizenDocs
    ```
 2. **Install the required Python dependencies:**
     
