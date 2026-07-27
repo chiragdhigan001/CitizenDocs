@@ -1,443 +1,1140 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html class="light" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ILoveGovernmentWebsites</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <link rel="icon" href="/favicon.ico?v=2" type="image/x-icon">
-
-
-    <style>
-        @keyframes float {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .blob { animation: float 10s ease-in-out infinite; }
-        .blob-delayed { animation: float 14s ease-in-out infinite alternate; }
-        
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        }
-        .glass-input {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .glass-input:focus { border-color: rgba(99, 102, 241, 0.8); outline: none; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
-        
-        .tab-btn { background: rgba(255,255,255,0.05); color: #a1a1aa; border: 1px solid transparent; }
-        .tab-btn.active { background: rgba(99, 102, 241, 0.2); color: white; border: 1px solid rgba(99, 102, 241, 0.5); text-shadow: 0 0 8px rgba(255,255,255,0.4); }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
-        
-        .cropper-view-box, .cropper-face { border-radius: 4px; }
-
-        .glass-checkbox {
-            appearance: none; -webkit-appearance: none;
-            min-width: 1.25rem; height: 1.25rem;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.375rem; background: rgba(0, 0, 0, 0.3);
-            position: relative; cursor: pointer; transition: all 0.2s ease;
-        }
-        .glass-checkbox:checked {
-            background: rgba(99, 102, 241, 0.8); border-color: rgba(99, 102, 241, 1);
-            box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
-        }
-        .glass-checkbox:checked::after {
-            content: ''; position: absolute; left: 30%; top: 15%;
-            width: 30%; height: 50%; border: solid white;
-            border-width: 0 2px 2px 0; transform: rotate(45deg);
-        }
-    </style>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta name="color-scheme" content="light dark">
+<title>CitizenDocs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface-container-low": "#f3f3fe",
+        "surface-container-high": "#e7e7f3",
+        "on-tertiary-container": "#ffede6",
+        "outline-variant": "#c3c6d7",
+        "tertiary-fixed-dim": "#ffb596",
+        "on-surface": "#191b23",
+        "error-container": "#ffdad6",
+        "on-error": "#ffffff",
+        "tertiary-container": "#bc4800",
+        "surface-bright": "#faf8ff",
+        "on-secondary": "#ffffff",
+        "primary-fixed": "#dbe1ff",
+        "secondary-container": "#2170e4",
+        "on-error-container": "#93000a",
+        "secondary-fixed-dim": "#adc6ff",
+        "on-secondary-fixed-variant": "#004395",
+        "inverse-primary": "#b4c5ff",
+        "outline": "#737686",
+        "secondary": "#0058be",
+        "on-surface-variant": "#434655",
+        "on-secondary-container": "#fefcff",
+        "inverse-surface": "#2e3039",
+        "error": "#ba1a1a",
+        "primary-fixed-dim": "#b4c5ff",
+        "tertiary-fixed": "#ffdbcd",
+        "surface": "#faf8ff",
+        "on-tertiary-fixed-variant": "#7d2d00",
+        "tertiary": "#943700",
+        "surface-tint": "#0053db",
+        "surface-dim": "#d9d9e5",
+        "primary": "#004ac6",
+        "secondary-fixed": "#d8e2ff",
+        "surface-container-highest": "#e1e2ed",
+        "surface-variant": "#e1e2ed",
+        "on-primary": "#ffffff",
+        "surface-container-lowest": "#ffffff",
+        "on-secondary-fixed": "#001a42",
+        "on-background": "#191b23",
+        "on-primary-fixed": "#00174b",
+        "primary-container": "#2563eb",
+        "on-tertiary-fixed": "#360f00",
+        "inverse-on-surface": "#f0f0fb",
+        "background": "#faf8ff",
+        "surface-container": "#ededf9",
+        "on-tertiary": "#ffffff",
+        "on-primary-fixed-variant": "#003ea8",
+        "on-primary-container": "#eeefff"
+      },
+      borderRadius: { sm: "0.25rem", DEFAULT: "0.5rem", md: "0.75rem", lg: "1rem", xl: "1.5rem", full: "9999px" },
+      spacing: {
+        gutter: "24px", base: "8px", md: "24px", lg: "48px",
+        xs: "4px", sm: "12px", "margin-desktop": "40px",
+        xl: "80px", "margin-mobile": "16px"
+      },
+      fontFamily: {
+        "label-sm": ["Inter"], "display": ["Inter"], "body-md": ["Inter"],
+        "label-md": ["Inter"], "headline-md": ["Inter"], "body-sm": ["Inter"],
+        "headline-lg-mobile": ["Inter"], "body-lg": ["Inter"], "headline-lg": ["Inter"]
+      },
+      fontSize: {
+        "label-sm": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+        "display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+        "body-md": ["16px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" }],
+        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500" }],
+        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "body-sm": ["14px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" }],
+        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+:root {
+  color-scheme: light;
+}
+html { background: #faf8ff; }
+html.dark {
+  color-scheme: dark;
+}
+body {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(99,102,241,0.12), transparent 22%),
+    linear-gradient(180deg, #fcfbff 0%, #f6f8ff 100%);
+}
+.app-shell {
+  position: relative;
+}
+.app-shell::before,
+.app-shell::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  inset: auto;
+  z-index: 0;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.45;
+}
+.app-shell::before {
+  top: 96px;
+  left: -72px;
+  width: 260px;
+  height: 260px;
+  background: rgba(37,99,235,0.18);
+}
+.app-shell::after {
+  right: -96px;
+  bottom: 72px;
+  width: 320px;
+  height: 320px;
+  background: rgba(148,55,0,0.12);
+}
+.glass-panel { background: rgba(250,248,255,0.74); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(195,198,215,0.24); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03); }
+.inner-etch { border: 1px solid rgba(115,118,134,0.1); }
+.soft-shadow { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03); }
+.active-nav-glow { box-shadow: 0 0 15px rgba(37,99,235,0.1); }
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+.fill-icon { font-variation-settings: 'FILL' 1; }
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #c3c6d7; border-radius: 10px; }
+.hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.hover-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+.dropzone { border: 2px dashed rgba(195,198,215,0.5); transition: all 0.25s; cursor: pointer; border-radius: 12px; }
+.dropzone:hover { border-color: #2563eb; background: rgba(37,99,235,0.03); }
+.field { background: #f3f3fe; border: 1px solid #c3c6d7; border-radius: 8px; padding: 10px 14px; font-size: 14px; transition: all 0.2s; outline: none; width: 100%; color: #191b23; }
+.field:focus { background: #ffffff; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); border-color: #004ac6; }
+.shell-panel { background: rgba(250,248,255,0.8); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+.nav-link { position: relative; overflow: hidden; }
+.nav-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(37,99,235,0.08), transparent 80%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.nav-link:hover::before,
+.nav-link.is-active::before { opacity: 1; }
+.hero-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(6px);
+  opacity: 0.6;
+}
+.metric-card,
+.tool-card,
+.section-card {
+  background: rgba(255,255,255,0.52);
+  border: 1px solid rgba(195,198,215,0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.tool-card:hover,
+.metric-card:hover,
+.section-card:hover {
+  border-color: rgba(37,99,235,0.22);
+  transform: translateY(-4px);
+}
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.list-row:hover {
+  background: rgba(243,243,254,0.8);
+  border-color: rgba(195,198,215,0.5);
+  transform: translateY(-1px);
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.tag-blue { background: rgba(37,99,235,0.12); color: #004ac6; }
+.tag-orange { background: rgba(188,72,0,0.12); color: #943700; }
+.tag-slate { background: rgba(115,118,134,0.12); color: #434655; }
+.sidebar-open { overflow: hidden; }
+.theme-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(37,99,235,0.08);
+  color: #004ac6;
+  border: 1px solid rgba(37,99,235,0.14);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+select.field { appearance: none; }
+select option { background: #ffffff; color: #191b23; }
+.btn-primary { background: #2563eb; color: #ffffff; border: none; border-radius: 8px; padding: 12px 24px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.15); }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-ghost { background: transparent; color: #434655; border: 1px solid #c3c6d7; border-radius: 8px; padding: 12px 24px; font-weight: 500; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+.btn-ghost:hover { background: #f3f3fe; border-color: #737686; }
+.ck { appearance: none; width: 18px; height: 18px; border: 2px solid #c3c6d7; border-radius: 5px; background: #f3f3fe; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+.ck:checked { background: #2563eb; border-color: #2563eb; box-shadow: 0 0 8px rgba(37,99,235,0.3); }
+.ck:checked::after { content: ''; display: block; width: 5px; height: 9px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); margin: 1px auto 0; }
+.rename-input { background: transparent; border: none; border-bottom: 1px solid transparent; color: #191b23; font-weight: 600; font-size: 13px; outline: none; transition: border 0.2s; width: 100px; }
+.rename-input:hover { border-bottom-color: #c3c6d7; }
+.rename-input:focus { border-bottom-color: #2563eb; }
+.hidden { display: none !important; }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+.cropper-view-box { border-radius: 6px; outline: none !important; }
+.cropper-face { border-radius: 6px; }
+.cropper-line { background: #2563eb !important; }
+.cropper-point { background: #2563eb !important; }
+.dark .text-on-surface { color: #f8fafc !important; }
+.dark .text-on-surface-variant,
+.dark .text-outline { color: #94a3b8 !important; }
+.dark .text-primary { color: #8ab4ff !important; }
+.dark .text-secondary { color: #7dc4ff !important; }
+.dark .text-tertiary { color: #ffb089 !important; }
+.dark .text-error { color: #ff8f8f !important; }
+.dark .text-on-primary-container,
+.dark .text-on-secondary-container { color: #eff6ff !important; }
+.dark .bg-surface-container,
+.dark .bg-surface-container-low,
+.dark .bg-surface-container-high,
+.dark .bg-surface-container-highest,
+.dark .bg-surface-container-lowest { background-color: rgba(30,41,59,0.82) !important; }
+.dark .bg-primary-container { background-color: #1d4ed8 !important; }
+.dark .bg-primary,
+.dark .btn-primary { background-color: #3b82f6 !important; }
+.dark .bg-on-primary-container { background-color: #dbeafe !important; }
+.dark .border-outline-variant,
+.dark .border-outline-variant\/10,
+.dark .border-outline-variant\/15,
+.dark .border-outline-variant\/20,
+.dark .border-outline-variant\/25,
+.dark .border-outline-variant\/30 { border-color: rgba(148,163,184,0.18) !important; }
+.dark .field { background: rgba(15,23,42,0.82); border-color: rgba(148,163,184,0.18); color: #f8fafc; }
+.dark .field:focus { background: #0f172a; box-shadow: 0 0 0 3px rgba(59,130,246,0.22); border-color: #60a5fa; }
+.dark select option { background: #162033; color: #f8fafc; }
+.dark .dropzone { border-color: rgba(100,116,139,0.55); background: rgba(15,23,42,0.28); }
+.dark .dropzone:hover { border-color: #60a5fa; background: rgba(59,130,246,0.08); }
+.dark .btn-ghost { color: #cbd5e1; border-color: rgba(148,163,184,0.2); background: rgba(15,23,42,0.22); }
+.dark .btn-ghost:hover { background: rgba(30,41,59,0.92); border-color: rgba(148,163,184,0.38); }
+.dark .rename-input { color: #f8fafc; }
+.dark .ck { background: rgba(15,23,42,0.82); border-color: #64748b; }
+.dark .glass-panel { background: rgba(9,15,28,0.72); border-color: rgba(148,163,184,0.12); box-shadow: 0 22px 30px -12px rgba(2,6,23,0.55), 0 14px 16px -12px rgba(2,6,23,0.45); }
+.dark .shell-panel,
+.dark .metric-card,
+.dark .tool-card,
+.dark .section-card { background: linear-gradient(180deg, rgba(12,18,32,0.86), rgba(17,24,39,0.72)); border-color: rgba(148,163,184,0.12); box-shadow: 0 22px 30px -12px rgba(2,6,23,0.42), inset 0 1px 0 rgba(255,255,255,0.03); }
+.dark .tool-card:hover,
+.dark .metric-card:hover,
+.dark .section-card:hover { border-color: rgba(96,165,250,0.32); }
+.dark .list-row:hover { background: rgba(30,41,59,0.7); border-color: rgba(96,165,250,0.18); }
+.dark .tag-blue { background: rgba(96,165,250,0.16); color: #93c5fd; }
+.dark .tag-orange { background: rgba(251,146,60,0.16); color: #fdba74; }
+.dark .tag-slate { background: rgba(148,163,184,0.16); color: #cbd5e1; }
+.dark .theme-status {
+  background: rgba(96,165,250,0.1);
+  color: #bfdbfe;
+  border-color: rgba(96,165,250,0.18);
+}
+.dark .btn-primary { box-shadow: 0 8px 20px rgba(37,99,235,0.25), inset 0 1px 0 rgba(255,255,255,0.1); }
+.dark body, .dark .bg-background { background-color: #0f172a !important; background-image: radial-gradient(circle at top left, rgba(59,130,246,0.16), transparent 26%), radial-gradient(circle at bottom right, rgba(99,102,241,0.14), transparent 24%), linear-gradient(180deg, #0f172a 0%, #111b31 100%) !important; }
+@media (max-width: 1023px) {
+  #sideOverlay { display: none; }
+  #sideOverlay.open { display: block; }
+  #sideNavShell {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+  #sideNavShell.open { transform: translateX(0); }
+}
+@media (min-width: 1024px) {
+  #sideOverlay { display: none !important; }
+}
+</style>
 </head>
-<body class="bg-gray-950 text-slate-100 min-h-screen font-sans relative overflow-x-hidden selection:bg-indigo-500/30">
-    
-    <div class="fixed inset-0 z-[-1] overflow-hidden">
-        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/30 rounded-full mix-blend-screen filter blur-[100px] blob"></div>
-        <div class="absolute top-[40%] right-[-10%] w-[400px] h-[400px] bg-fuchsia-600/30 rounded-full mix-blend-screen filter blur-[100px] blob-delayed"></div>
-        <div class="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] blob"></div>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<div class="app-shell">
+<div id="sideOverlay" class="fixed inset-0 z-40 bg-slate-950/35 backdrop-blur-sm lg:hidden" onclick="closeSidebar()"></div>
+<aside id="sideNavShell" class="shell-panel h-screen w-72 lg:w-64 fixed left-0 top-0 border-r border-outline-variant/15 shadow-xl flex flex-col p-md gap-base z-50">
+<div class="flex items-center gap-base mb-md px-xs">
+  <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary">
+    <span class="material-symbols-outlined text-headline-md" style="font-variation-settings: 'FILL' 1;">shield</span>
+  </div>
+  <div>
+    <h1 class="font-display text-headline-md font-bold text-on-surface">CitizenDocs</h1>
+    <p class="font-label-sm text-on-surface-variant opacity-70">v1.2.0</p>
+  </div>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar custom-scrollbar" id="sideNav">
+  <a class="nav-link is-active flex items-center gap-sm px-sm py-base bg-secondary-container/50 text-on-secondary-container font-semibold rounded-lg transition-all duration-300 ease-in-out hover:translate-x-1 active-nav-glow" href="#" onclick="switchView('dashboard')" data-view="dashboard">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-label-md">Dashboard</span>
+  </a>
+  <a class="nav-link flex items-center gap-sm px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 rounded-lg transition-all duration-300 ease-in-out hover:translate-x-1" href="#" onclick="switchView('compress')" data-view="compress">
+    <span class="material-symbols-outlined">compress</span>
+    <span class="font-label-md">Compress Image</span>
+  </a>
+  <a class="nav-link flex items-center gap-sm px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 rounded-lg transition-all duration-300 ease-in-out hover:translate-x-1" href="#" onclick="switchView('crop')" data-view="crop">
+    <span class="material-symbols-outlined">crop</span>
+    <span class="font-label-md">Crop Image</span>
+  </a>
+  <a class="nav-link flex items-center gap-sm px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 rounded-lg transition-all duration-300 ease-in-out hover:translate-x-1" href="#" onclick="switchView('convert')" data-view="convert">
+    <span class="material-symbols-outlined">transform</span>
+    <span class="font-label-md">Convert Format</span>
+  </a>
+  <a class="nav-link flex items-center gap-sm px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 rounded-lg transition-all duration-300 ease-in-out hover:translate-x-1" href="#" onclick="switchView('pdf')" data-view="pdf">
+    <span class="material-symbols-outlined">picture_as_pdf</span>
+    <span class="font-label-md">Image to PDF</span>
+  </a>
+  <a class="nav-link flex items-center gap-sm px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 rounded-lg transition-all duration-300 ease-in-out hover:translate-x-1" href="#" onclick="switchView('audio')" data-view="audio">
+    <span class="material-symbols-outlined">graphic_eq</span>
+    <span class="font-label-md">Extract Audio</span>
+  </a>
+<div class="pt-md border-t border-outline-variant/10 mt-md">
+    <p class="px-sm pb-base font-label-sm text-outline uppercase tracking-widest opacity-50">Utility</p>
+    <a class="nav-link flex items-center gap-sm px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 rounded-lg transition-all duration-300 ease-in-out hover:translate-x-1" href="#" onclick="switchView('history')" data-view="history">
+      <span class="material-symbols-outlined">history</span>
+      <span class="font-label-md">History</span>
+    </a>
+    <a class="nav-link flex items-center gap-sm px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 rounded-lg transition-all duration-300 ease-in-out hover:translate-x-1" href="#" onclick="switchView('settings')" data-view="settings">
+      <span class="material-symbols-outlined">settings</span>
+      <span class="font-label-md">Settings</span>
+    </a>
+  </div>
+</nav>
+<div class="mt-auto space-y-md">
+  <div class="p-sm rounded-xl bg-primary-container text-on-primary-container">
+    <h4 class="font-label-md font-bold mb-xs">Upgrade to Pro</h4>
+    <p class="font-label-sm opacity-80 mb-sm">Get batch processing &amp; cloud sync.</p>
+    <button class="w-full py-base bg-on-primary-container text-primary-container rounded-lg font-label-md font-bold transition-all hover:scale-[1.02] active:scale-95">Upgrade</button>
+  </div>
+  <div class="flex flex-col gap-xs px-xs">
+    <div class="flex items-center gap-xs text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">
+      <span class="material-symbols-outlined text-[18px]">security</span>
+      <span class="font-label-sm">Privacy Policy</span>
     </div>
+    <div class="flex items-center gap-xs text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">
+      <span class="material-symbols-outlined text-[18px]">description</span>
+      <span class="font-label-sm">Terms</span>
+    </div>
+  </div>
+</div>
+</aside>
+<header class="shell-panel fixed top-0 right-0 left-0 lg:left-64 h-16 z-30 border-b border-outline-variant/15 shadow-sm">
+<div class="flex justify-between items-center px-4 lg:px-md h-full w-full max-w-7xl mx-auto">
+  <div class="flex items-center gap-lg">
+    <button onclick="toggleSidebar()" class="lg:hidden w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high/50 rounded-full transition-all duration-200">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <span id="pageTitle" class="font-headline-md font-bold text-on-surface">Dashboard</span>
+    <nav class="hidden md:flex gap-md">
+      <a class="font-label-md text-on-surface-variant hover:text-on-surface transition-all duration-200" href="#">Docs</a>
+      <a class="font-label-md text-on-surface-variant hover:text-on-surface transition-all duration-200" href="#">Pricing</a>
+    </nav>
+  </div>
+  <div class="flex items-center gap-md">
+    <div class="relative hidden lg:block">
+      <input class="bg-surface-container w-64 rounded-full border-none focus:ring-2 focus:ring-primary/20 text-body-sm px-md py-xs" placeholder="Search tools..." type="text" id="globalSearch" onkeydown="if(event.key==='Enter'&&this.value)searchTool(this.value)">
+      <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+    </div>
+    <div class="flex items-center gap-sm border-l border-outline-variant/20 pl-md">
+      <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high/50 rounded-full transition-all duration-200" id="themeBtn">
+        <span class="material-symbols-outlined">dark_mode</span>
+      </button>
+    </div>
+  </div>
+</div>
+</header>
+<main class="pt-16 min-h-screen lg:ml-64">
+<div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-md py-8 lg:py-xl">
 
-    <div class="max-w-6xl mx-auto px-4 py-6 sm:py-8 relative z-10">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 border-b border-white/10">
-            <div class="mb-5 md:mb-0 text-center md:text-left w-full md:w-auto">
-                <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)] break-all sm:break-normal">ILoveGovernmentWebsites</h1>
-                <p class="text-sm text-slate-400 mt-2 font-medium tracking-wide">For strict forms and absolute privacy.</p>
-            </div>
-            <nav class="flex flex-wrap justify-center gap-2 glass-panel p-1.5 rounded-2xl w-full md:w-auto">
-                <button onclick="switchTab('converter')" id="tab-converter" class="tab-btn active px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">Convert</button>
-                <button onclick="switchTab('cropper')" id="tab-cropper" class="tab-btn px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">Crop</button>
-                <button onclick="switchTab('compressor')" id="tab-compressor" class="tab-btn px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">KB Reducer</button>
-                <button onclick="switchTab('pdf-tool')" id="tab-pdf-tool" class="tab-btn px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">PDF Composer</button>
-            </nav>
-        </header>
+<template id="format-options">
+  <optgroup label="Images">
+    <option value="png">PNG (Lossless)</option>
+    <option value="jpg">JPG (Standard)</option>
+    <option value="webp">WebP (Optimized)</option>
+    <option value="avif">AVIF (Next-Gen)</option>
+    <option value="heic">HEIC (Apple)</option>
+    <option value="gif">GIF</option>
+    <option value="bmp">BMP</option>
+    <option value="ico">ICO (Icon)</option>
+  </optgroup>
+</template>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-            <div class="lg:col-span-2 space-y-6">
-                
-                <template id="format-options">
-                    <optgroup label="Images" class="bg-slate-900 text-white">
-                        <option value="png">PNG (Lossless)</option>
-                        <option value="jpg">JPG (Standard)</option>
-                        <option value="webp">WebP (Optimized)</option>
-                        <option value="avif">AVIF (Next-Gen)</option>
-                        <option value="heic">HEIC (Apple)</option>
-                        <option value="gif">GIF</option>
-                        <option value="bmp">BMP</option>
-                        <option value="ico">ICO (Icon)</option>
-                    </optgroup>
-                </template>
-
-                <!-- Tool 1: Format Converter -->
-                <div id="panel-converter" class="glass-panel p-5 sm:p-8 rounded-3xl tool-panel">
-                    <h2 class="text-xl sm:text-2xl font-semibold mb-6">Format Converter</h2>
-                    <div class="space-y-5">
-                        <select id="convFormat" class="w-full glass-input rounded-xl px-4 py-3 appearance-none">
-                            <option value="mp3" class="bg-slate-900">Extract Audio from MP4</option>
-                        </select>
-                        <div class="border-2 border-dashed border-white/20 rounded-2xl p-6 sm:p-10 text-center relative hover:border-indigo-400/50 transition-colors bg-black/20">
-                            <input type="file" id="convFile" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
-                            <div class="text-slate-300 text-sm sm:text-base" id="convLabel">Tap or Drop media here</div>
-                        </div>
-                        <button onclick="processApi('/api/convert', 'convFile', {target_format: 'convFormat'}, this)" class="w-full bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-400 hover:to-blue-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all">Process File</button>
-                    </div>
-                </div>
-
-                <!-- Tool 2: Visual Cropper -->
-                <div id="panel-cropper" class="glass-panel p-5 sm:p-8 rounded-3xl tool-panel hidden">
-                    <h2 class="text-xl sm:text-2xl font-semibold mb-6">Visual Crop Editor</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                        <select id="cropRatio" class="glass-input rounded-xl px-4 py-3 appearance-none">
-                            <option value="NaN" class="bg-slate-900">Free Size (Custom)</option>
-                            <option value="1:1" class="bg-slate-900">Passport Square (1:1)</option>
-                            <option value="4:5" class="bg-slate-900">Document Portrait (4:5)</option>
-                            <option value="16:9" class="bg-slate-900">Landscape (16:9)</option>
-                        </select>
-                        <select id="cropFormat" class="glass-input rounded-xl px-4 py-3 appearance-none"></select>
-                    </div>
-                    
-                    <div id="cropDropzone" class="border-2 border-dashed border-white/20 rounded-2xl p-6 sm:p-10 text-center relative hover:border-fuchsia-400/50 transition-colors bg-black/20 mb-5">
-                        <input type="file" id="cropFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
-                        <div class="text-slate-300 text-sm sm:text-base">Tap or Drop image to begin</div>
-                    </div>
-
-                    <div id="cropPreviewContainer" class="hidden mb-5 w-full max-h-[500px] overflow-hidden rounded-2xl bg-black/40 border border-white/10">
-                        <img id="cropImage" src="" class="block max-w-full">
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button id="btnCancelCrop" onclick="resetCropperUI()" class="hidden px-6 py-3.5 bg-white/10 hover:bg-white/20 font-bold text-white rounded-xl transition-all">Cancel</button>
-                        <button id="btnApplyCrop" onclick="processVisualCrop()" class="w-full bg-gradient-to-r from-fuchsia-500 to-purple-500 hover:from-fuchsia-400 hover:to-purple-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(217,70,239,0.4)] transition-all">Apply Visual Crop</button>
-                    </div>
-                </div>
-
-                <!-- Tool 3: KB Reducer -->
-                <div id="panel-compressor" class="glass-panel p-5 sm:p-8 rounded-3xl tool-panel hidden">
-                    <h2 class="text-xl sm:text-2xl font-semibold mb-6">KB Reducer</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                        <div class="relative">
-                            <span class="absolute left-4 top-3.5 text-slate-400 text-sm font-bold z-10 pointer-events-none">KB</span>
-                            <input type="number" id="compKb" placeholder="Target size" value="200" class="w-full glass-input rounded-xl py-3 pl-12 pr-4 relative z-0">
-                        </div>
-                        <select id="compFormat" class="glass-input rounded-xl px-4 py-3 appearance-none"></select>
-                    </div>
-                    <div class="border-2 border-dashed border-white/20 rounded-2xl p-6 sm:p-10 text-center relative hover:border-cyan-400/50 transition-colors bg-black/20 mb-5">
-                        <input type="file" id="compFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
-                        <div class="text-slate-300 text-sm sm:text-base" id="compLabel">Tap or Drop image to reduce</div>
-                    </div>
-                    <button onclick="processApi('/api/compress', 'compFile', {target_format: 'compFormat', target_kb: 'compKb'}, this)" class="w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all">Compress Image</button>
-                </div>
-
-                <!-- Tool 4: PDF Composer -->
-                <div id="panel-pdf-tool" class="glass-panel p-5 sm:p-8 rounded-3xl tool-panel hidden">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl sm:text-2xl font-semibold">Image to PDF Composer</h2>
-                        <span class="bg-rose-500/20 text-rose-300 text-[10px] sm:text-xs px-2 sm:px-3 py-1 rounded-full border border-rose-500/30">Staging Area</span>
-                    </div>
-
-                    <div class="border-2 border-dashed border-white/20 rounded-2xl p-6 sm:p-10 text-center relative hover:border-rose-400/50 transition-colors bg-black/20 mb-5">
-                        <input type="file" id="pdfImagesInput" multiple accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
-                        <div class="text-slate-300 text-sm sm:text-base">Tap or Drop to add images to the sequence</div>
-                    </div>
-
-                    <div id="pdfPreviewList" class="flex flex-wrap gap-3 sm:gap-4 mb-5 max-h-[300px] overflow-y-auto p-2 bg-black/20 rounded-xl border border-white/5 min-h-[120px] items-center justify-center">
-                        <div class="text-slate-500 text-sm">No images added yet</div>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button onclick="clearPdfList()" class="px-6 py-3.5 bg-white/10 hover:bg-white/20 font-bold text-white rounded-xl transition-all">Clear</button>
-                        <button id="btnCompilePdf" onclick="compileDirectPDF(this)" class="w-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.4)] transition-all">Generate PDF</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- History Tray -->
-            <div class="glass-panel p-5 sm:p-6 rounded-3xl h-[450px] lg:h-[600px] flex flex-col border-t border-white/30">
-                <div class="flex justify-between items-center mb-5 sm:mb-6 border-b border-white/10 pb-4">
-                    <h3 class="font-bold text-xs sm:text-sm tracking-widest uppercase text-slate-300 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_#4ade80] animate-pulse"></span> Activity
-                    </h3>
-                    <button onclick="compilePdfFromSelection()" class="text-[10px] sm:text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-2 sm:px-3 py-1.5 rounded-lg font-semibold transition text-indigo-300">Merge Selected</button>
-                </div>
-                <div id="historyList" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
-            </div>
+<!-- DASHBOARD VIEW -->
+<div id="view-dashboard" class="view-panel">
+<section class="glass-panel relative mb-xl rounded-[32px] overflow-hidden p-6 md:p-8 lg:p-xl flex flex-col items-center text-center">
+    <div class="hero-orb w-44 h-44 bg-primary/20 top-[-40px] left-[-20px]"></div>
+    <div class="hero-orb w-56 h-56 bg-tertiary/15 bottom-[-64px] right-[-24px]"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-white/55 via-white/10 to-primary/5"></div>
+    <div class="relative inline-flex items-center gap-xs px-md py-xs bg-primary-container/10 text-primary rounded-full mb-md">
+      <span class="material-symbols-outlined text-[18px] fill-icon">verified_user</span>
+      <span class="font-label-sm">Local-first Encryption Enabled</span>
+    </div>
+    <h2 class="relative font-display text-4xl md:text-5xl max-w-3xl mb-md leading-tight">Privacy-first document tools that never leave your computer.</h2>
+    <p class="relative font-body-lg text-on-surface-variant max-w-2xl mb-lg opacity-80">Compress, convert, organize and process files securely on your local machine. No servers, no data leaks, pure performance.</p>
+    <div class="relative flex flex-col sm:flex-row items-center gap-md">
+      <button onclick="switchView('compress')" class="px-xl py-md bg-primary text-on-primary rounded-xl font-headline-md transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 active:scale-95">Get Started</button>
+      <button onclick="switchView('history')" class="px-xl py-md glass-panel text-on-surface border border-outline-variant/30 rounded-xl font-headline-md transition-all duration-300 hover:bg-surface-container-high/50 active:scale-95">View History</button>
+    </div>
+    <div class="relative mt-lg grid grid-cols-1 sm:grid-cols-3 gap-sm w-full max-w-4xl">
+      <div class="metric-card rounded-2xl p-md text-left transition-all duration-300">
+        <p class="font-label-sm text-outline uppercase tracking-[0.18em] mb-xs">Privacy</p>
+        <p class="font-headline-md text-on-surface">Zero cloud transfer</p>
+        <p class="font-body-sm text-on-surface-variant mt-xs">Everything runs locally in your workspace.</p>
+      </div>
+      <div class="metric-card rounded-2xl p-md text-left transition-all duration-300">
+        <p class="font-label-sm text-outline uppercase tracking-[0.18em] mb-xs">Speed</p>
+        <p class="font-headline-md text-on-surface">Fast single-step tools</p>
+        <p class="font-body-sm text-on-surface-variant mt-xs">Optimized for quick conversions and cleanup.</p>
+      </div>
+      <div class="metric-card rounded-2xl p-md text-left transition-all duration-300">
+        <p class="font-label-sm text-outline uppercase tracking-[0.18em] mb-xs">Retention</p>
+        <p class="font-headline-md text-on-surface">24h local history</p>
+        <p class="font-body-sm text-on-surface-variant mt-xs">Processed files stay easy to recover during your session.</p>
+      </div>
+    </div>
+  </section>
+  <section class="mb-xl">
+    <div class="flex items-center justify-between mb-lg">
+      <div>
+        <h3 class="font-headline-lg text-on-surface">Processing Toolbox</h3>
+        <p class="font-body-md text-on-surface-variant">Select a tool to begin local processing</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+      <div class="tool-card p-md rounded-2xl transition-all duration-300 group cursor-pointer" onclick="switchView('compress')">
+        <div class="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center text-primary mb-md group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-headline-lg">compress</span>
         </div>
+        <h4 class="font-headline-md mb-xs text-on-surface">Compress Image</h4>
+        <p class="font-body-sm text-on-surface-variant">Reduce file size without losing quality.</p>
+        <div class="mt-md flex items-center gap-xs text-primary font-label-md opacity-0 group-hover:opacity-100 transition-opacity">Launch Tool <span class="material-symbols-outlined text-[16px]">arrow_forward</span></div>
+      </div>
+      <div class="tool-card p-md rounded-2xl transition-all duration-300 group cursor-pointer" onclick="switchView('crop')">
+        <div class="w-14 h-14 rounded-xl bg-tertiary/5 flex items-center justify-center text-tertiary mb-md group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-headline-lg">crop</span>
+        </div>
+        <h4 class="font-headline-md mb-xs text-on-surface">Crop Image</h4>
+        <p class="font-body-sm text-on-surface-variant">Precision cropping and aspect ratio adjustments.</p>
+        <div class="mt-md flex items-center gap-xs text-primary font-label-md opacity-0 group-hover:opacity-100 transition-opacity">Launch Tool <span class="material-symbols-outlined text-[16px]">arrow_forward</span></div>
+      </div>
+      <div class="tool-card p-md rounded-2xl transition-all duration-300 group cursor-pointer" onclick="switchView('convert')">
+        <div class="w-14 h-14 rounded-xl bg-secondary/5 flex items-center justify-center text-secondary mb-md group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-headline-lg">transform</span>
+        </div>
+        <h4 class="font-headline-md mb-xs text-on-surface">Convert Format</h4>
+        <p class="font-body-sm text-on-surface-variant">Lightning fast conversion between PNG, WebP, AVIF, and more.</p>
+        <div class="mt-md flex items-center gap-xs text-primary font-label-md opacity-0 group-hover:opacity-100 transition-opacity">Launch Tool <span class="material-symbols-outlined text-[16px]">arrow_forward</span></div>
+      </div>
+      <div class="tool-card p-md rounded-2xl transition-all duration-300 group cursor-pointer" onclick="switchView('pdf')">
+        <div class="w-14 h-14 rounded-xl bg-error/5 flex items-center justify-center text-error mb-md group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-headline-lg">picture_as_pdf</span>
+        </div>
+        <h4 class="font-headline-md mb-xs text-on-surface">Image to PDF</h4>
+        <p class="font-body-sm text-on-surface-variant">Combine multiple images into a single PDF document.</p>
+        <div class="mt-md flex items-center gap-xs text-primary font-label-md opacity-0 group-hover:opacity-100 transition-opacity">Launch Tool <span class="material-symbols-outlined text-[16px]">arrow_forward</span></div>
+      </div>
+      <div class="tool-card p-md rounded-2xl transition-all duration-300 group cursor-pointer" onclick="switchView('audio')">
+        <div class="w-14 h-14 rounded-xl bg-primary-fixed-dim/20 flex items-center justify-center text-primary mb-md group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-headline-lg">graphic_eq</span>
+        </div>
+        <h4 class="font-headline-md mb-xs text-on-surface">Extract Audio</h4>
+        <p class="font-body-sm text-on-surface-variant">Isolate audio tracks from video files.</p>
+        <div class="mt-md flex items-center gap-xs text-primary font-label-md opacity-0 group-hover:opacity-100 transition-opacity">Launch Tool <span class="material-symbols-outlined text-[16px]">arrow_forward</span></div>
+      </div>
+      <div class="tool-card p-md rounded-2xl transition-all duration-300 group cursor-pointer" onclick="switchView('history')">
+        <div class="w-14 h-14 rounded-xl bg-surface-container-highest/50 flex items-center justify-center text-on-surface-variant mb-md group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-headline-lg">history</span>
+        </div>
+        <h4 class="font-headline-md mb-xs text-on-surface">History</h4>
+        <p class="font-body-sm text-on-surface-variant">Review your local processing logs and manage files.</p>
+        <div class="mt-md flex items-center gap-xs text-primary font-label-md opacity-0 group-hover:opacity-100 transition-opacity">View Logs <span class="material-symbols-outlined text-[16px]">arrow_forward</span></div>
+      </div>
     </div>
+  </section>
+  <section>
+    <div class="flex items-center justify-between mb-lg">
+      <h3 class="font-headline-lg text-on-surface">Recent Files</h3>
+    </div>
+    <div class="section-card rounded-[28px] p-6 md:p-xl transition-all duration-300" id="recentFilesPanel">
+      <div id="dashHistoryList" class="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar"></div>
+    </div>
+  </section>
+</div>
+<!-- CONVERT VIEW -->
+<div id="view-convert" class="view-panel hidden">
+  <div class="flex items-center gap-xs mb-lg">
+    <span class="material-symbols-outlined text-primary text-headline-md fill-icon">transform</span>
+    <div><h2 class="font-headline-lg text-on-surface">Format Converter</h2><p class="font-body-md text-on-surface-variant">Convert media between formats locally.</p></div>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-base mb-4 max-w-2xl">
+    <div class="glass-panel p-md rounded-xl hover:shadow-lg transition-all cursor-pointer group flex flex-col items-center justify-center gap-base border-primary-container/20 hover:border-primary-container" onclick="document.getElementById('convFormat').value='png'">
+      <span class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary font-bold text-sm">PNG</span>
+      <span class="font-label-md text-label-md text-on-surface-variant">Lossless</span>
+    </div>
+    <div class="glass-panel p-md rounded-xl hover:shadow-lg transition-all cursor-pointer group flex flex-col items-center justify-center gap-base border-primary-container/20 hover:border-primary-container" onclick="document.getElementById('convFormat').value='jpg'">
+      <span class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary font-bold text-sm">JPG</span>
+      <span class="font-label-md text-label-md text-on-surface-variant">Compact</span>
+    </div>
+    <div class="glass-panel p-md rounded-xl hover:shadow-lg transition-all cursor-pointer group flex flex-col items-center justify-center gap-base border-primary-container/20 hover:border-primary-container" onclick="document.getElementById('convFormat').value='webp'">
+      <span class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary font-bold text-sm">WEBP</span>
+      <span class="font-label-md text-label-md text-on-surface-variant">Next-gen</span>
+    </div>
+    <div class="glass-panel p-md rounded-xl hover:shadow-lg transition-all cursor-pointer group flex flex-col items-center justify-center gap-base border-primary-container/20 hover:border-primary-container" onclick="document.getElementById('convFormat').value='heic'">
+      <span class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary font-bold text-sm">HEIC</span>
+      <span class="font-label-md text-label-md text-on-surface-variant">Apple</span>
+    </div>
+    <div class="glass-panel p-md rounded-xl hover:shadow-lg transition-all cursor-pointer group flex flex-col items-center justify-center gap-base border-primary-container/20 hover:border-primary-container" onclick="document.getElementById('convFormat').value='avif'">
+      <span class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary font-bold text-sm">AVIF</span>
+      <span class="font-label-md text-label-md text-on-surface-variant">Ultra</span>
+    </div>
+    <div class="glass-panel p-md rounded-xl hover:shadow-lg transition-all cursor-pointer group flex flex-col items-center justify-center gap-base border-primary-container/20 hover:border-primary-container" onclick="document.getElementById('convFormat').value='ico'">
+      <span class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary font-bold text-sm">ICO</span>
+      <span class="font-label-md text-label-md text-on-surface-variant">Icons</span>
+    </div>
+  </div>
+  <div class="glass-panel p-md rounded-xl max-w-2xl">
+    <div class="space-y-4">
+      <select id="convFormat" class="field"><option value="mp3">Extract Audio from MP4</option></select>
+      <div class="dropzone p-lg text-center relative">
+        <input type="file" id="convFile" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+        <span class="material-symbols-outlined text-4xl text-outline">upload_file</span>
+        <p class="font-label-md text-on-surface-variant mt-sm" id="convLabel">Drop a file or click to browse</p>
+      </div>
+      <button onclick="processApi('/api/convert','convFile',{target_format:'convFormat'},this)" class="btn-primary w-full">Process File</button>
+    </div>
+  </div>
+</div>
 
-    <script>
-        const formats = document.getElementById('format-options').innerHTML;
-        document.getElementById('convFormat').innerHTML += formats;
-        document.getElementById('cropFormat').innerHTML = formats;
-        document.getElementById('compFormat').innerHTML = formats;
+<!-- CROP VIEW -->
+<div id="view-crop" class="view-panel hidden">
+  <div class="flex items-center gap-xs mb-lg">
+    <span class="material-symbols-outlined text-primary text-headline-md fill-icon">crop</span>
+    <div><h2 class="font-headline-lg text-on-surface">Crop Image</h2><p class="font-body-md text-on-surface-variant">Precision cropping tool.</p></div>
+  </div>
+  <div class="flex flex-col lg:flex-row gap-gutter">
+    <div class="flex-1 glass-panel p-md rounded-xl">
+      <div id="cropDropzone" class="dropzone p-lg text-center relative mb-4">
+        <input type="file" id="cropFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+        <span class="material-symbols-outlined text-4xl text-outline">add_photo_alternate</span>
+        <p class="font-label-md text-on-surface-variant mt-sm">Drop image to start cropping</p>
+      </div>
+      <div id="cropPreviewContainer" class="hidden mb-4 rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant max-h-[400px]">
+        <img id="cropImage" src="" class="block max-w-full">
+      </div>
+      <div class="hidden flex gap-3" id="btnCancelCrop">
+        <button onclick="resetCropperUI()" class="btn-ghost">Cancel</button>
+        <button id="btnApplyCrop" onclick="processVisualCrop()" class="btn-primary flex-1">Apply Crop</button>
+      </div>
+    </div>
+    <div class="w-full lg:w-80 flex flex-col gap-gutter">
+      <div id="cropRatioPanel" class="glass-panel p-md rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-headline-md font-bold text-on-surface">Aspect Ratio</h3>
+          <span class="material-symbols-outlined text-outline">aspect_ratio</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+          <button class="flex flex-col items-center justify-center p-2 rounded-xl border border-primary bg-primary-container/10 text-primary transition-all" data-ratio="NaN">
+            <span class="font-label-sm font-bold">Free</span>
+            <span class="text-[10px] opacity-70">Custom</span>
+          </button>
+          <button class="flex flex-col items-center justify-center p-2 rounded-xl border border-outline-variant hover:border-primary hover:bg-surface-container transition-all" data-ratio="1:1">
+            <span class="font-label-sm font-bold">1:1</span>
+            <span class="text-[10px] opacity-70">Square</span>
+          </button>
+          <button class="flex flex-col items-center justify-center p-2 rounded-xl border border-outline-variant hover:border-primary hover:bg-surface-container transition-all" data-ratio="4:5">
+            <span class="font-label-sm font-bold">4:5</span>
+            <span class="text-[10px] opacity-70">Portrait</span>
+          </button>
+          <button class="flex flex-col items-center justify-center p-2 rounded-xl border border-outline-variant hover:border-primary hover:bg-surface-container transition-all" data-ratio="16:9">
+            <span class="font-label-sm font-bold">16:9</span>
+            <span class="text-[10px] opacity-70">Wide</span>
+          </button>
+        </div>
+      </div>
+      <div class="glass-panel p-md rounded-xl shadow-sm flex-1">
+        <h3 class="font-label-md font-bold text-on-surface-variant uppercase tracking-wider mb-3">Output Settings</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center py-1 border-b border-outline-variant/10">
+            <span class="text-on-surface-variant/70 text-sm">Format</span>
+            <select id="cropFormat" class="bg-transparent font-label-md border-none focus:ring-0 text-right cursor-pointer text-on-surface"></select>
+          </div>
+        </div>
+        <div class="mt-4 p-2 bg-surface-container-high/30 rounded-xl border border-outline-variant/10">
+          <div class="flex gap-2">
+            <span class="material-symbols-outlined text-primary text-sm shrink-0 fill-icon">lock</span>
+            <p class="text-[12px] leading-relaxed text-on-surface-variant"><strong>Your data is safe.</strong> Processing occurs entirely in your browser. No images uploaded to servers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- COMPRESS VIEW -->
+<div id="view-compress" class="view-panel hidden">
+  <div class="flex items-center gap-xs mb-lg">
+    <span class="material-symbols-outlined text-primary text-headline-md fill-icon">compress</span>
+    <div><h2 class="font-headline-lg text-on-surface">KB Reducer</h2><p class="font-body-md text-on-surface-variant">Compress images to a target file size.</p></div>
+  </div>
+  <div class="glass-panel p-md rounded-xl max-w-2xl">
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div class="relative">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-sm">KB</span>
+        <input type="number" id="compKb" value="200" class="field pl-9">
+      </div>
+      <select id="compFormat" class="field"></select>
+    </div>
+    <div class="dropzone p-lg text-center relative mb-4">
+      <input type="file" id="compFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+      <p class="font-label-md text-on-surface-variant" id="compLabel">Drop image to reduce</p>
+    </div>
+    <button onclick="processApi('/api/compress','compFile',{target_format:'compFormat',target_kb:'compKb'},this)" class="btn-primary w-full">Compress Image</button>
+  </div>
+</div>
 
-        ['conv', 'comp'].forEach(prefix => {
-            document.getElementById(`${prefix}File`).addEventListener('change', e => {
-                document.getElementById(`${prefix}Label`).innerText = e.target.files[0]?.name || "Tap or Drop media here";
-            });
-        });
+<!-- PDF VIEW -->
+<div id="view-pdf" class="view-panel hidden">
+  <div class="flex items-center gap-xs mb-lg">
+    <span class="material-symbols-outlined text-primary text-headline-md fill-icon">picture_as_pdf</span>
+    <div><h2 class="font-headline-lg text-on-surface">PDF Composer</h2><p class="font-body-md text-on-surface-variant">Merge images into a single PDF.</p></div>
+  </div>
+  <div class="glass-panel p-md rounded-xl max-w-2xl">
+    <div class="dropzone p-lg text-center relative mb-4">
+      <input type="file" id="pdfImagesInput" multiple accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+      <p class="font-label-md text-on-surface-variant">Add images to sequence</p>
+    </div>
+    <div id="pdfPreviewList" class="flex flex-wrap gap-2 mb-4 min-h-[80px] p-3 rounded-xl bg-surface-container-lowest border border-outline-variant items-center justify-center max-h-[240px] overflow-y-auto"></div>
+    <div class="flex gap-3">
+      <button onclick="clearPdfList()" class="btn-ghost">Clear</button>
+      <button id="btnCompilePdf" onclick="compileDirectPDF(this)" class="btn-primary flex-1">Generate PDF</button>
+    </div>
+  </div>
+</div>
 
-        // PDF COMPOSER LOGIC
-        let pdfFilesArray = [];
+<!-- AUDIO VIEW -->
+<div id="view-audio" class="view-panel hidden">
+  <div class="flex items-center gap-xs mb-lg">
+    <span class="material-symbols-outlined text-primary text-headline-md fill-icon">graphic_eq</span>
+    <div><h2 class="font-headline-lg text-on-surface">Extract Audio</h2><p class="font-body-md text-on-surface-variant">Extract audio from MP4 files.</p></div>
+  </div>
+  <div class="glass-panel p-md rounded-xl max-w-2xl">
+    <div class="space-y-4">
+      <select id="audFormat" class="field"><option value="mp3">MP3 (128 kbps)</option><option value="wav">WAV (Lossless)</option><option value="aac">AAC (256 kbps)</option></select>
+      <div class="dropzone p-lg text-center relative">
+        <input type="file" id="audFile" accept="video/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+        <span class="material-symbols-outlined text-4xl text-outline">movie</span>
+        <p class="font-label-md text-on-surface-variant mt-sm" id="audLabel">Drop MP4 video to extract audio</p>
+      </div>
+      <button onclick="processApi('/api/convert','audFile',{target_format:'audFormat'},this)" class="btn-primary w-full">Extract Audio</button>
+    </div>
+  </div>
+</div>
+<!-- HISTORY VIEW -->
+<div id="view-history" class="view-panel hidden">
+  <div class="flex items-center gap-xs mb-lg">
+    <span class="material-symbols-outlined text-primary text-headline-md fill-icon">history</span>
+    <div>
+      <h2 class="font-headline-lg text-on-surface">Activity History</h2>
+      <p class="font-body-md text-on-surface-variant">Track all your processed files.</p>
+    </div>
+    <div class="ml-auto"><button onclick="compilePdfFromSelection()" class="btn-ghost text-sm py-2 px-4">Merge Selected</button></div>
+  </div>
+  <div class="glass-panel p-md rounded-xl">
+    <div id="historyList" class="space-y-2 max-h-[600px] overflow-y-auto custom-scrollbar min-h-[200px]"></div>
+  </div>
+</div>
 
-        document.getElementById('pdfImagesInput').addEventListener('change', e => {
-            const files = Array.from(e.target.files);
-            files.forEach(file => pdfFilesArray.push(file));
-            renderPdfPreview();
-            e.target.value = ''; 
-        });
+<!-- SETTINGS VIEW -->
+<div id="view-settings" class="view-panel hidden">
+  <div class="mb-lg">
+    <h2 class="font-headline-lg text-on-surface">Settings</h2>
+    <p class="font-body-md text-on-surface-variant">Configure workspace appearance and local retention behavior.</p>
+  </div>
+  <div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter">
+    <section class="section-card xl:col-span-7 rounded-[28px] p-md transition-all duration-300">
+      <div class="flex items-center gap-sm text-primary mb-md">
+        <span class="material-symbols-outlined">palette</span>
+        <h3 class="font-headline-md text-on-surface">Appearance</h3>
+      </div>
+      <div class="mb-md">
+        <span class="theme-status">
+          <span class="material-symbols-outlined text-[14px]" id="themeStatusIcon">light_mode</span>
+          <span id="themeStatusText">Active: Light</span>
+        </span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-sm">
+        <button onclick="setThemeMode('light')" id="theme-light" class="theme-choice border-2 border-primary bg-primary/5 rounded-2xl p-sm text-left transition-all">
+          <div class="aspect-video rounded-xl border border-outline-variant/25 bg-white mb-sm flex items-center justify-center">
+            <span class="material-symbols-outlined text-outline">light_mode</span>
+          </div>
+          <p class="font-label-md text-on-surface">Light</p>
+        </button>
+        <button onclick="setThemeMode('dark')" id="theme-dark" class="theme-choice border-2 border-transparent bg-surface-container-low rounded-2xl p-sm text-left transition-all">
+          <div class="aspect-video rounded-xl border border-slate-800 bg-slate-950 mb-sm flex items-center justify-center">
+            <span class="material-symbols-outlined text-slate-400">dark_mode</span>
+          </div>
+          <p class="font-label-md text-on-surface">Dark</p>
+        </button>
+        <button onclick="setThemeMode('auto')" id="theme-auto" class="theme-choice border-2 border-transparent bg-surface-container-low rounded-2xl p-sm text-left transition-all">
+          <div class="aspect-video rounded-xl border border-outline-variant/25 mb-sm overflow-hidden flex">
+            <div class="flex-1 bg-white flex items-center justify-center"><span class="material-symbols-outlined text-outline text-sm">light_mode</span></div>
+            <div class="flex-1 bg-slate-950 flex items-center justify-center"><span class="material-symbols-outlined text-slate-400 text-sm">dark_mode</span></div>
+          </div>
+          <p class="font-label-md text-on-surface">System</p>
+        </button>
+      </div>
+      <div class="mt-md p-sm rounded-2xl bg-surface-container-low border border-outline-variant/20">
+        <div class="flex items-start gap-sm">
+          <span class="material-symbols-outlined text-primary fill-icon">verified_user</span>
+          <div>
+            <p class="font-label-md text-on-surface">Privacy-first interface</p>
+            <p class="font-body-sm text-on-surface-variant mt-xs">Theme changes are visual only. Processing remains local in every mode.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section-card xl:col-span-5 rounded-[28px] p-md transition-all duration-300">
+      <div class="flex items-center gap-sm text-primary mb-md">
+        <span class="material-symbols-outlined">history_toggle_off</span>
+        <h3 class="font-headline-md text-on-surface">Data Retention</h3>
+      </div>
+      <div class="space-y-md">
+        <div>
+          <label class="font-label-md text-on-surface block mb-xs">Automatic cleanup</label>
+          <select class="field">
+            <option>Immediately after download</option>
+            <option selected>After 24 hours</option>
+            <option>After 7 days</option>
+            <option>Never</option>
+          </select>
+        </div>
+        <div class="rounded-2xl border border-error/20 bg-error-container/35 p-sm">
+          <p class="font-label-md text-on-error-container">Clear local history</p>
+          <p class="font-body-sm text-on-error-container opacity-80 mt-xs">Removes processed file references from the current session.</p>
+          <button onclick="clearHistoryView()" class="mt-sm px-md py-xs bg-error text-on-error rounded-lg font-label-md transition-all hover:brightness-105 active:scale-95">Clear Now</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 
-        function renderPdfPreview() {
-            const container = document.getElementById('pdfPreviewList');
-            if (pdfFilesArray.length === 0) {
-                container.innerHTML = '<div class="w-full text-center text-slate-500 py-4 text-sm">No images added yet</div>';
-                return;
-            }
-            container.innerHTML = '';
+</div>
+</main>
 
-            const promises = pdfFilesArray.map(file => {
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.readAsDataURL(file);
-                });
-            });
+<!-- Privacy Indicator Badge -->
+<div class="fixed bottom-4 right-4 lg:bottom-6 lg:right-6 z-20 glass-panel px-md py-sm rounded-2xl flex items-center gap-sm shadow-xl border-primary/10">
+  <div class="relative"><span class="flex h-3 w-3 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span></div>
+  <div class="flex flex-col">
+    <span class="font-label-sm text-on-surface">Local Environment Secure</span>
+    <span class="text-[10px] text-on-surface-variant font-medium uppercase tracking-tighter">Zero-Knowledge Processing</span>
+  </div>
+</div>
 
-            Promise.all(promises).then(results => {
-                results.forEach((src, index) => {
-                    container.innerHTML += `
-                        <div class="relative group w-[80px] sm:w-[100px] bg-black/40 rounded-xl overflow-hidden border border-white/10 flex flex-col justify-between hover:border-rose-500/50 transition-colors">
-                            <img src="${src}" class="w-full h-[80px] sm:h-[100px] object-cover opacity-80 group-hover:opacity-100 transition-opacity">
-                            
-                            <div class="flex w-full justify-between items-center bg-black/80 px-1 py-1 sm:py-1.5 border-t border-white/10">
-                                <button onclick="movePdfFile(${index}, -1)" class="${index === 0 ? 'invisible' : ''} text-white hover:text-indigo-400 p-1 bg-white/10 rounded transition-colors text-[10px] sm:text-xs">◀</button>
-                                <span class="text-[9px] sm:text-[10px] font-bold text-white bg-black px-1.5 sm:px-2 py-0.5 rounded-full">Pg ${index + 1}</span>
-                                <button onclick="movePdfFile(${index}, 1)" class="${index === pdfFilesArray.length - 1 ? 'invisible' : ''} text-white hover:text-indigo-400 p-1 bg-white/10 rounded transition-colors text-[10px] sm:text-xs">▶</button>
-                            </div>
-                            
-                            <button onclick="removePdfFile(${index})" class="absolute top-1 right-1 bg-red-500/90 hover:bg-red-500 text-white w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all shadow-lg sm:transform sm:translate-y-[-5px] sm:group-hover:translate-y-0 z-10">✕</button>
-                        </div>
-                    `;
-                });
-            });
-        }
+<!-- Command Palette -->
+<div class="hidden fixed inset-0 z-[100] flex items-start justify-center pt-[153px] px-md" id="commandPalette">
+  <div class="absolute inset-0 bg-surface/40 backdrop-blur-md" onclick="closeCommandPalette()"></div>
+  <div class="relative w-full max-w-xl glass-panel shadow-2xl rounded-2xl overflow-hidden border border-outline-variant/30 flex flex-col">
+    <div class="flex items-center px-md py-lg gap-base border-b border-outline-variant/15">
+      <span class="material-symbols-outlined text-primary text-[28px]">search</span>
+      <input class="flex-1 bg-transparent border-none focus:ring-0 text-body-lg font-body-lg text-on-surface" placeholder="Type a command or search tools..." type="text" id="commandInput" onkeydown="if(event.key==='Enter')executeCommand(this.value)">
+      <span class="px-2 py-1 rounded bg-surface-container-highest text-label-sm text-outline font-bold">ESC</span>
+    </div>
+    <div class="p-base max-h-96 overflow-y-auto custom-scrollbar">
+      <div class="px-sm py-xs font-label-sm text-label-sm text-outline uppercase tracking-widest">Tools</div>
+      <div class="px-sm py-base hover:bg-primary-container/10 rounded-lg flex items-center justify-between group cursor-pointer" onclick="switchView('compress')">
+        <div class="flex items-center gap-base"><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">compress</span><span class="font-label-md text-label-md text-on-surface">Compress Image</span></div>
+        <span class="font-label-sm text-label-sm text-outline">&#x23CE;</span>
+      </div>
+      <div class="px-sm py-base hover:bg-primary-container/10 rounded-lg flex items-center justify-between group cursor-pointer" onclick="switchView('crop')">
+        <div class="flex items-center gap-base"><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">crop</span><span class="font-label-md text-label-md text-on-surface">Crop Image</span></div>
+        <span class="font-label-sm text-label-sm text-outline">&#x23CE;</span>
+      </div>
+      <div class="px-sm py-base hover:bg-primary-container/10 rounded-lg flex items-center justify-between group cursor-pointer" onclick="switchView('convert')">
+        <div class="flex items-center gap-base"><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">transform</span><span class="font-label-md text-label-md text-on-surface">Convert Format</span></div>
+        <span class="font-label-sm text-label-sm text-outline">&#x23CE;</span>
+      </div>
+      <div class="px-sm py-base hover:bg-primary-container/10 rounded-lg flex items-center justify-between group cursor-pointer" onclick="switchView('pdf')">
+        <div class="flex items-center gap-base"><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">picture_as_pdf</span><span class="font-label-md text-label-md text-on-surface">Image to PDF</span></div>
+        <span class="font-label-sm text-label-sm text-outline">&#x23CE;</span>
+      </div>
+      <div class="px-sm py-base hover:bg-primary-container/10 rounded-lg flex items-center justify-between group cursor-pointer" onclick="switchView('audio')">
+        <div class="flex items-center gap-base"><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">graphic_eq</span><span class="font-label-md text-label-md text-on-surface">Extract Audio</span></div>
+        <span class="font-label-sm text-label-sm text-outline">&#x23CE;</span>
+      </div>
+    </div>
+  </div>
+</div>
+ </div>
+<script>
+const formats = document.getElementById('format-options').innerHTML;
+document.getElementById('convFormat').innerHTML += formats;
+document.getElementById('cropFormat').innerHTML = formats;
+document.getElementById('compFormat').innerHTML = formats;
+const THEME_STORAGE_KEY = 'citizendocs-theme-mode';
+const systemThemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+let themeMode = 'light';
 
-        function movePdfFile(index, direction) {
-            if (index + direction < 0 || index + direction >= pdfFilesArray.length) return;
-            const temp = pdfFilesArray[index];
-            pdfFilesArray[index] = pdfFilesArray[index + direction];
-            pdfFilesArray[index + direction] = temp;
-            renderPdfPreview();
-        }
+function toggleSidebar() {
+  const sidebar = document.getElementById('sideNavShell');
+  const overlay = document.getElementById('sideOverlay');
+  const isOpen = sidebar.classList.toggle('open');
+  overlay.classList.toggle('open', isOpen);
+  document.body.classList.toggle('sidebar-open', isOpen);
+}
 
-        function removePdfFile(index) {
-            pdfFilesArray.splice(index, 1);
-            renderPdfPreview();
-        }
+function closeSidebar() {
+  document.getElementById('sideNavShell').classList.remove('open');
+  document.getElementById('sideOverlay').classList.remove('open');
+  document.body.classList.remove('sidebar-open');
+}
 
-        function clearPdfList() {
-            pdfFilesArray = [];
-            renderPdfPreview();
-        }
+document.getElementById('cropRatioPanel').addEventListener('click', function(e) {
+  const ratioBtn = e.target.closest('[data-ratio]');
+  if (!ratioBtn || !cropper) return;
+  const val = ratioBtn.dataset.ratio;
+  document.querySelectorAll('[data-ratio]').forEach(b => {
+    b.classList.remove('border-primary', 'bg-primary-container/10', 'text-primary');
+    b.classList.add('border-outline-variant', 'text-on-surface-variant');
+  });
+  ratioBtn.classList.add('border-primary', 'bg-primary-container/10', 'text-primary');
+  ratioBtn.classList.remove('border-outline-variant', 'text-on-surface-variant');
+  if (val === 'NaN') cropper.setAspectRatio(NaN);
+  else { const [w, h] = val.split(':'); cropper.setAspectRatio(w / h); }
+});
 
-        async function compileDirectPDF(btn) {
-            if (pdfFilesArray.length === 0) return alert("Add at least one image to the staging area.");
-            
-            const originalText = btn.innerText;
-            btn.innerText = "Compiling PDF...";
-            btn.disabled = true;
-            
-            const formData = new FormData();
-            pdfFilesArray.forEach(file => formData.append("files", file));
-            
-            try {
-                const res = await fetch('/api/merge-pdf', { method: 'POST', body: formData });
-                if(res.ok) {
-                    clearPdfList();
-                    fetchHistory();
-                } else alert("Error compiling PDF.");
-            } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
-        }
+function toggleTheme() {
+  const nextMode = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+  setThemeMode(nextMode);
+}
 
-        // Cropper Logic
-        let cropper;
-        document.getElementById('cropFile').addEventListener('change', e => {
-            const file = e.target.files[0];
-            if(file) {
-                const url = URL.createObjectURL(file);
-                document.getElementById('cropImage').src = url;
-                document.getElementById('cropDropzone').classList.add('hidden');
-                document.getElementById('cropPreviewContainer').classList.remove('hidden');
-                document.getElementById('btnCancelCrop').classList.remove('hidden');
-                if(cropper) cropper.destroy();
-                cropper = new Cropper(document.getElementById('cropImage'), { viewMode: 1, aspectRatio: NaN, background: false });
-            }
-        });
+function setThemeMode(mode) {
+  themeMode = mode;
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn').querySelector('span');
+  const shouldUseDark = mode === 'dark' || (mode === 'auto' && systemThemeMedia.matches);
+  html.classList.toggle('dark', shouldUseDark);
+  btn.textContent = mode === 'auto' ? 'brightness_auto' : shouldUseDark ? 'light_mode' : 'dark_mode';
+  document.querySelectorAll('.theme-choice').forEach(choice => {
+    choice.classList.remove('border-primary', 'bg-primary/5');
+    choice.classList.add('border-transparent', 'bg-surface-container-low');
+  });
+  const activeChoice = document.getElementById('theme-' + mode);
+  if (activeChoice) {
+    activeChoice.classList.add('border-primary', 'bg-primary/5');
+    activeChoice.classList.remove('border-transparent', 'bg-surface-container-low');
+  }
+  const statusText = document.getElementById('themeStatusText');
+  const statusIcon = document.getElementById('themeStatusIcon');
+  if (statusText) {
+    const modeLabel = mode === 'auto' ? (shouldUseDark ? 'System Dark' : 'System Light') : mode.charAt(0).toUpperCase() + mode.slice(1);
+    statusText.textContent = 'Active: ' + modeLabel;
+  }
+  if (statusIcon) {
+    statusIcon.textContent = mode === 'auto' ? 'brightness_auto' : shouldUseDark ? 'dark_mode' : 'light_mode';
+  }
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, mode);
+  } catch (e) {}
+}
 
-        document.getElementById('cropRatio').addEventListener('change', e => {
-            if(!cropper) return;
-            const val = e.target.value;
-            if(val === 'NaN') cropper.setAspectRatio(NaN);
-            else { const [w, h] = val.split(':'); cropper.setAspectRatio(w / h); }
-        });
+function initializeThemeMode() {
+  let savedMode = 'auto';
+  try {
+    savedMode = localStorage.getItem(THEME_STORAGE_KEY) || 'auto';
+  } catch (e) {}
+  setThemeMode(savedMode);
+}
 
-        function resetCropperUI() {
-            if(cropper) cropper.destroy();
-            cropper = null;
-            document.getElementById('cropFile').value = '';
-            document.getElementById('cropDropzone').classList.remove('hidden');
-            document.getElementById('cropPreviewContainer').classList.add('hidden');
-            document.getElementById('btnCancelCrop').classList.add('hidden');
-        }
+systemThemeMedia.addEventListener('change', () => {
+  if (themeMode === 'auto') setThemeMode('auto');
+});
 
-        async function processVisualCrop() {
-            if(!cropper) return alert("Select an image first");
-            const format = document.getElementById('cropFormat').value;
-            const btn = document.getElementById('btnApplyCrop');
-            const originalText = btn.innerText;
-            btn.innerText = "Processing...";
-            btn.disabled = true;
-            
-            cropper.getCroppedCanvas().toBlob(async (blob) => {
-                const formData = new FormData();
-                formData.append("file", blob, "cropped_source.png"); 
-                formData.append("target_format", format);
-                try {
-                    const res = await fetch('/api/convert', { method: 'POST', body: formData });
-                    if(res.ok) { resetCropperUI(); fetchHistory(); }
-                    else alert("Error saving crop.");
-                } finally { btn.innerText = originalText; btn.disabled = false; }
-            }, 'image/png');
-        }
+function switchView(view) {
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('view-' + view).classList.remove('hidden');
+  document.getElementById('pageTitle').textContent = view.charAt(0).toUpperCase() + view.slice(1);
+  document.querySelectorAll('#sideNav a').forEach(a => {
+    a.classList.remove('bg-secondary-container/50', 'text-on-secondary-container', 'font-semibold', 'is-active');
+    a.classList.add('text-on-surface-variant');
+    if (a.dataset.view === view) {
+      a.classList.add('bg-secondary-container/50', 'text-on-secondary-container', 'font-semibold', 'is-active');
+      a.classList.remove('text-on-surface-variant');
+    }
+  });
+  closeSidebar();
+  closeCommandPalette();
+  if (view === 'history' || view === 'dashboard') fetchHistory();
+}
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tool-panel').forEach(p => p.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`panel-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).classList.add('active');
-        }
+function searchTool(query) {
+  const q = query.toLowerCase().trim();
+  const map = { compress: 'compress', crop: 'crop', convert: 'convert', pdf: 'pdf', audio: 'audio', history: 'history' };
+  for (const [k, v] of Object.entries(map)) {
+    if (k.includes(q) || v.includes(q)) { switchView(v); document.getElementById('globalSearch').value = ''; return; }
+  }
+}
 
-        async function renameItem(id, newName, oldName) {
-            if (newName === oldName) return;
-            if (!newName.trim()) { alert("Filename cannot be empty."); fetchHistory(); return; }
-            const formData = new FormData();
-            formData.append("new_name", newName.trim());
-            const res = await fetch(`/api/rename/${id}`, { method: 'PUT', body: formData });
-            if (!res.ok) {
-                const data = await res.json();
-                alert(data.detail || "Error renaming file");
-            }
-            fetchHistory();
-        }
+function closeCommandPalette() { document.getElementById('commandPalette').classList.add('hidden'); }
 
-        async function fetchHistory() {
-            const res = await fetch('/api/history');
-            const data = await res.json();
-            const container = document.getElementById('historyList');
-            if(data.length === 0) {
-                container.innerHTML = '<div class="text-slate-500 text-sm text-center pt-10 font-medium">No recent activity</div>';
-                return;
-            }
-            container.innerHTML = '';
-            data.forEach(item => {
-                const isImg = ['png','jpg','webp','avif','heic','gif','bmp','jpeg','ico'].includes(item.format);
-                container.innerHTML += `
-                    <div class="bg-black/30 border border-white/5 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between group hover:bg-black/40 transition">
-                        <div class="flex items-center space-x-2 sm:space-x-3 overflow-hidden">
-                            ${isImg ? `<input type="checkbox" value="${item.id}" class="pdf-check glass-checkbox transform scale-75 sm:scale-100">` : '<div class="w-4 sm:w-5"></div>'}
-                            <div class="flex flex-col">
-                                <div class="flex items-center gap-1 sm:gap-2 group/edit">
-                                    <input type="text" value="${item.name}" 
-                                        class="bg-transparent border-b border-transparent hover:border-white/20 focus:border-indigo-500 text-slate-100 font-semibold text-xs sm:text-sm outline-none w-24 sm:w-32 transition-colors px-1 -ml-1 rounded"
-                                        onchange="renameItem('${item.id}', this.value, '${item.name}')"
-                                        onkeydown="if(event.key==='Enter') this.blur()"
-                                        title="Tap to rename">
-                                    <span class="text-[10px] text-slate-500 opacity-100 sm:opacity-0 sm:group-hover/edit:opacity-100 transition-opacity cursor-pointer">✏️</span>
-                                </div>
-                                <p class="text-[9px] sm:text-[11px] text-slate-400 font-medium mt-0.5 px-1">${item.size} • ${item.format.toUpperCase()}</p>
-                            </div>
-                        </div>
-                        <div class="flex space-x-1 sm:space-x-2 pl-1 sm:pl-2">
-                            <a href="/api/download/${item.id}" download class="p-1 sm:p-1.5 bg-white/5 hover:bg-indigo-500/30 rounded-lg text-indigo-300 transition-colors text-xs sm:text-base">↓</a>
-                            <button onclick="deleteItem('${item.id}')" class="p-1 sm:p-1.5 bg-white/5 hover:bg-rose-500/30 rounded-lg text-rose-400 transition-colors text-xs sm:text-base">✕</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
+function executeCommand(query) {
+  const q = query.toLowerCase().trim();
+  if (q.includes('compress') || q.includes('compress')) switchView('compress');
+  else if (q.includes('crop')) switchView('crop');
+  else if (q.includes('convert')) switchView('convert');
+  else if (q.includes('pdf')) switchView('pdf');
+  else if (q.includes('audio')) switchView('audio');
+  else if (q.includes('history')) switchView('history');
+  else switchView('dashboard');
+  document.getElementById('commandInput').value = '';
+  closeCommandPalette();
+}
 
-        async function processApi(endpoint, fileInputId, payloadMap, btn) {
-            const fileInput = document.getElementById(fileInputId);
-            if(!fileInput.files[0]) return alert("Please select a file first.");
-            const originalText = btn.innerText;
-            btn.innerText = "Processing...";
-            btn.disabled = true;
-            const formData = new FormData();
-            formData.append("file", fileInput.files[0]);
-            for (const [key, id] of Object.entries(payloadMap)) formData.append(key, document.getElementById(id).value);
-            try {
-                const res = await fetch(endpoint, { method: 'POST', body: formData });
-                if(res.ok) {
-                    fileInput.value = '';
-                    fileInput.nextElementSibling.innerText = "Tap or Drop media here";
-                    fetchHistory();
-                } else alert("Error processing file.");
-            } finally { btn.innerText = originalText; btn.disabled = false; }
-        }
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); document.getElementById('commandPalette').classList.toggle('hidden'); }
+  if (e.key === 'Escape') { closeCommandPalette(); closeSidebar(); }
+});
 
-        async function compilePdfFromSelection() {
-            const checked = Array.from(document.querySelectorAll('.pdf-check:checked')).map(el => el.value);
-            if(checked.length === 0) return alert("Select images using checkboxes.");
-            const formData = new FormData();
-            formData.append("file_ids", checked.join(","));
-            const res = await fetch('/api/merge-pdf', { method: 'POST', body: formData });
-            if(res.ok) fetchHistory();
-        }
+document.getElementById('commandPalette').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeCommandPalette(); });
 
-        async function deleteItem(id) {
-            await fetch(`/api/delete/${id}`, { method: 'DELETE' });
-            fetchHistory();
-        }
+['conv','comp'].forEach(p => {
+  const el = document.getElementById(p + 'File');
+  if (el) el.addEventListener('change', function(e) {
+    const lbl = document.getElementById(p + 'Label');
+    if (lbl) lbl.innerText = e.target.files[0]?.name || 'Drop a file or click to browse';
+  });
+});
 
-        fetchHistory();
-        setInterval(fetchHistory, 30000);
-    </script>
+const audFile = document.getElementById('audFile');
+if (audFile) audFile.addEventListener('change', function(e) {
+  const lbl = document.getElementById('audLabel');
+  if (lbl) lbl.innerText = e.target.files[0]?.name || 'Drop MP4 video to extract audio';
+});
+let pdfFilesArray = [];
+document.getElementById('pdfImagesInput').addEventListener('change', function(e) {
+  Array.from(e.target.files).forEach(f => pdfFilesArray.push(f));
+  renderPdfPreview(); e.target.value = '';
+});
+
+function renderPdfPreview() {
+  const c = document.getElementById('pdfPreviewList');
+  if (pdfFilesArray.length === 0) { c.innerHTML = '<div style="color:var(--on-surface-variant);font-size:13px;">No images added</div>'; return; }
+  c.innerHTML = '';
+  Promise.all(pdfFilesArray.map(f => new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(f); }))).then(results => {
+    results.forEach((src, i) => {
+      c.innerHTML += '<div style="position:relative;width:85px;border-radius:8px;overflow:hidden;border:1px solid #c3c6d7;flex-shrink:0;">' +
+        '<img src="' + src + '" style="width:100%;height:75px;object-fit:cover;">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;padding:3px 5px;background:#f3f3fe;border-top:1px solid #c3c6d7;">' +
+          '<button onclick="movePdfFile(' + i + ',-1)" style="' + (i === 0 ? 'visibility:hidden' : '') + 'padding:1px 5px;border:1px solid #c3c6d7;background:white;border-radius:4px;cursor:pointer;color:#434655;font-size:10px;">&#x25C0;</button>' +
+          '<span style="font-size:9px;font-weight:600;color:#434655;">' + (i + 1) + '</span>' +
+          '<button onclick="movePdfFile(' + i + ',1)" style="' + (i === pdfFilesArray.length - 1 ? 'visibility:hidden' : '') + 'padding:1px 5px;border:1px solid #c3c6d7;background:white;border-radius:4px;cursor:pointer;color:#434655;font-size:10px;">&#x25B6;</button>' +
+        '</div>' +
+        '<button onclick="removePdfFile(' + i + ')" style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#ffdad6;color:#ba1a1a;border:none;font-size:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#x2715;</button>' +
+      '</div>';
+    });
+  });
+}
+
+function movePdfFile(i, d) { if (i + d < 0 || i + d >= pdfFilesArray.length) return; const t = pdfFilesArray[i]; pdfFilesArray[i] = pdfFilesArray[i + d]; pdfFilesArray[i + d] = t; renderPdfPreview(); }
+function removePdfFile(i) { pdfFilesArray.splice(i, 1); renderPdfPreview(); }
+function clearPdfList() { pdfFilesArray = []; renderPdfPreview(); }
+
+async function compileDirectPDF(btn) {
+  if (pdfFilesArray.length === 0) return alert('Add at least one image.');
+  const ot = btn.innerText; btn.innerText = 'Compiling...'; btn.disabled = true;
+  const fd = new FormData(); pdfFilesArray.forEach(f => fd.append('files', f));
+  try {
+    const r = await fetch('/api/merge-pdf', { method: 'POST', body: fd });
+    if (r.ok) { clearPdfList(); fetchHistory(); } else alert('Error compiling PDF.');
+  } finally { btn.innerText = ot; btn.disabled = false; }
+}
+
+let cropper;
+document.getElementById('cropFile').addEventListener('change', function(e) {
+  const f = e.target.files[0];
+  if (f) {
+    document.getElementById('cropImage').src = URL.createObjectURL(f);
+    document.getElementById('cropDropzone').classList.add('hidden');
+    document.getElementById('cropPreviewContainer').classList.remove('hidden');
+    document.getElementById('btnCancelCrop').classList.remove('hidden');
+    if (cropper) cropper.destroy();
+    cropper = new Cropper(document.getElementById('cropImage'), { viewMode: 1, aspectRatio: NaN, background: false });
+  }
+});
+
+function resetCropperUI() {
+  if (cropper) cropper.destroy(); cropper = null;
+  document.getElementById('cropFile').value = '';
+  document.getElementById('cropDropzone').classList.remove('hidden');
+  document.getElementById('cropPreviewContainer').classList.add('hidden');
+  document.getElementById('btnCancelCrop').classList.add('hidden');
+}
+
+async function processVisualCrop() {
+  if (!cropper) return alert('Select an image first');
+  const format = document.getElementById('cropFormat').value;
+  const btn = document.getElementById('btnApplyCrop');
+  const ot = btn.innerText; btn.innerText = 'Processing...'; btn.disabled = true;
+  cropper.getCroppedCanvas().toBlob(async blob => {
+    const fd = new FormData(); fd.append('file', blob, 'cropped_source.png'); fd.append('target_format', format);
+    try {
+      const r = await fetch('/api/convert', { method: 'POST', body: fd });
+      if (r.ok) { resetCropperUI(); fetchHistory(); } else alert('Error saving crop.');
+    } finally { btn.innerText = ot; btn.disabled = false; }
+  }, 'image/png');
+}
+
+async function renameItem(id, newName, oldName) {
+  if (newName === oldName) return;
+  if (!newName.trim()) { alert('Filename cannot be empty.'); fetchHistory(); return; }
+  const fd = new FormData(); fd.append('new_name', newName.trim());
+  const r = await fetch('/api/rename/' + id, { method: 'PUT', body: fd });
+  if (!r.ok) { const d = await r.json(); alert(d.detail || 'Error renaming'); }
+  fetchHistory();
+}
+
+async function fetchHistory() {
+  try {
+    const r = await fetch('/api/history');
+    const data = await r.json();
+    renderHistory('historyList', data);
+    renderHistory('dashHistoryList', data);
+  } catch (e) {}
+}
+
+function renderHistory(containerId, data) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  if (data.length === 0) {
+    c.innerHTML = '<div class="text-center py-10 text-on-surface-variant text-sm">' +
+      '<span class="material-symbols-outlined text-4xl text-outline block mb-2">folder_open</span>' +
+      'No recent activity found</div>';
+    return;
+  }
+  c.innerHTML = '';
+  data.forEach(item => {
+    const isImg = ['png','jpg','webp','avif','heic','gif','bmp','jpeg','ico'].includes(item.format);
+    const actionTag = isImg ? 'Image' : item.format === 'pdf' ? 'PDF' : 'Audio';
+    const tagClass = isImg ? 'tag-blue' : item.format === 'pdf' ? 'tag-orange' : 'tag-slate';
+    c.innerHTML += '<div class="list-row">' +
+      '<div class="flex items-center gap-3 overflow-hidden flex-1 min-w-0">' +
+        (isImg ? '<input type="checkbox" value="' + item.id + '" class="ck">' : '<div style="width:18px;"></div>') +
+        '<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-outline flex-shrink-0">' +
+          '<span class="material-symbols-outlined text-[18px]">' + (isImg ? 'image' : item.format === 'pdf' ? 'picture_as_pdf' : 'audio_file') + '</span>' +
+        '</div>' +
+        '<div class="min-w-0 flex-1">' +
+          '<div class="flex items-center gap-2 flex-wrap">' +
+            '<input type="text" value="' + item.name + '" class="rename-input" onchange="renameItem(\'' + item.id + '\',this.value,\'' + item.name + '\')" onkeydown="if(event.key===\'Enter\')this.blur()" title="Click to rename">' +
+            '<span class="tag ' + tagClass + '">' + actionTag + '</span>' +
+          '</div>' +
+          '<div class="text-[11px] text-outline font-medium mt-1">' + item.size + ' • ' + item.format.toUpperCase() + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="flex gap-1 flex-shrink-0">' +
+        '<a href="/api/download/' + item.id + '" download class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/10 transition-colors no-underline">&#x2193;</a>' +
+        '<button onclick="deleteItem(\'' + item.id + '\')" class="w-9 h-9 rounded-lg flex items-center justify-center bg-transparent text-error hover:bg-error/10 transition-colors border-none cursor-pointer">&#x2715;</button>' +
+      '</div>' +
+    '</div>';
+  });
+}
+function clearHistoryView() {
+  document.querySelectorAll('#historyList .ck:checked').forEach(el => el.checked = false);
+  document.getElementById('historyList').innerHTML = '<div class="text-center py-10 text-on-surface-variant text-sm"><span class="material-symbols-outlined text-4xl text-outline block mb-2">delete_sweep</span>History visuals cleared for this session.</div>';
+}
+async function processApi(endpoint, fileInputId, payloadMap, btn) {
+  const fi = document.getElementById(fileInputId);
+  if (!fi || !fi.files[0]) return alert('Please select a file first.');
+  const ot = btn.innerText; btn.innerText = 'Processing...'; btn.disabled = true;
+  const fd = new FormData(); fd.append('file', fi.files[0]);
+  for (const [k, v] of Object.entries(payloadMap)) fd.append(k, document.getElementById(v).value);
+  try {
+    const r = await fetch(endpoint, { method: 'POST', body: fd });
+    if (r.ok) {
+      fi.value = '';
+      const lblId = fileInputId.replace('File', 'Label');
+      const lbl = document.getElementById(lblId);
+      if (lbl) lbl.innerText = 'Drop a file or click to browse';
+      fetchHistory();
+    } else alert('Error processing file.');
+  } finally { btn.innerText = ot; btn.disabled = false; }
+}
+
+async function compilePdfFromSelection() {
+  const checked = Array.from(document.querySelectorAll('.ck:checked')).map(el => el.value);
+  if (checked.length === 0) return alert('Select images using checkboxes.');
+  const fd = new FormData(); fd.append('file_ids', checked.join(','));
+  const r = await fetch('/api/merge-pdf', { method: 'POST', body: fd });
+  if (r.ok) fetchHistory();
+}
+
+async function deleteItem(id) {
+  await fetch('/api/delete/' + id, { method: 'DELETE' });
+  fetchHistory();
+}
+
+fetchHistory();
+initializeThemeMode();
+setInterval(fetchHistory, 30000);
+</script>
 </body>
 </html>

@@ -57,6 +57,12 @@ async def favicon():
         return FileResponse("favicon.ico")
     raise HTTPException(status_code=404, detail="Favicon not found")
 
+@app.get("/favicon.svg", include_in_schema=False)
+async def favicon_svg():
+    if os.path.exists("favicon.svg"):
+        return FileResponse("favicon.svg", media_type="image/svg+xml")
+    raise HTTPException(status_code=404, detail="Favicon not found")
+
 @app.get("/")
 async def get_ui():
     with open("index.html", "r", encoding="utf-8") as f:
